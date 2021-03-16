@@ -12,9 +12,12 @@ int main() {
   int i;
 
   for (i = 0; i < 2; i++) {
-    neurons[i] = Neuron_create(4);
+    neurons[i] = Neuron_create(8);
     printf("neurons[%d]->bias: %f\n", i, neurons[i]->bias);
-    printf("neurons[%d]->weights[%d]: %f\n", i, i, neurons[i]->weights[i]);
+    for (int j = 0; j < 8; j++) {
+      printf("neurons[%d]->weights[%d]: %f\n", i, j, neurons[i]->weights[j]);
+      printf("neurons[%d]->inputs[%d]: %f\n", i, j, neurons[i]->inputs[j]);
+    }
   }
 
   for (i = 0; i < 2; i++) {
