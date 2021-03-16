@@ -25,6 +25,23 @@ struct Neuron *Neuron_create(int num_inputs) {
   return neuron;
 }
 
+struct Layer *Layer_create(int num_neurons, int num_neuron_inputs) {
+
+  struct Layer *layer = malloc(sizeof(struct Layer));
+  assert(layer != NULL);
+
+  layer->num_neurons = num_neurons;
+
+  layer->neurons = malloc(num_neurons * sizeof(struct Neuron));
+  assert(layer->neurons != NULL);
+
+  for (int i = 0; i < num_neurons; i++) {
+    layer->neurons[i] = Neuron_create(num_neuron_inputs);
+  }
+
+  return layer;
+}
+
 void Neuron_destroy(struct Neuron *neuron) {
 
   assert(neuron != NULL);
@@ -36,4 +53,17 @@ void Neuron_destroy(struct Neuron *neuron) {
   free(neuron->weights);
 
   free(neuron);
+}
+
+void Layer_destroy(struct Layer *layer) {
+
+  assert(layer != NULL);
+
+  assert(layer->neurons != NULL);
+  for (int i = 0; i < layer->num_neurons; i++) {
+    Neuron_destroy(layer->neurons[i]);
+  }
+  free(layer->neurons);
+
+  free(layer);
 }
