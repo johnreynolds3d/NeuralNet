@@ -1,12 +1,25 @@
+#include "../libs/headers/neuralnet.h"
 #include <stdio.h>
+#include <stdlib.h>
+#include <time.h>
 
-struct Neuron {
-  int num_inputs;
-  double bias;
-  double output;
-  double error_gradient;
-  double weights[];
-  double inputs[];
-};
+int main() {
 
-int main() { return 0 }
+  srand(time(NULL));
+
+  struct Neuron *neurons[2];
+
+  int i;
+
+  for (i = 0; i < 2; i++) {
+    neurons[i] = Neuron_create(4);
+    printf("neurons[%d]->bias: %f\n", i, neurons[i]->bias);
+    printf("neurons[%d]->weights[%d]: %f\n", i, i, neurons[i]->weights[i]);
+  }
+
+  for (i = 0; i < 2; i++) {
+    Neuron_destroy(neurons[i]);
+  }
+
+  return 0;
+}
