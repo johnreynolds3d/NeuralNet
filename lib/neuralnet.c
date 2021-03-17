@@ -19,7 +19,7 @@ struct Neuron *Neuron_create(int num_inputs) {
 
   for (int i = 0; i < num_inputs; i++) {
     neuron->weights[i] = (double)rand() / RAND_MAX * 2.0 - 1.0;
-    neuron->inputs[i] = 0;
+    neuron->inputs[i] = (double)rand() / RAND_MAX * 2.0 - 1.0;
   }
 
   return neuron;

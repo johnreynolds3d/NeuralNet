@@ -6,48 +6,40 @@
 int main() {
 
   srand(time(NULL));
-  /*
-    struct Neuron *neurons[2];
 
-    int i;
+  int num_layers = 1;
+  int num_neurons = 2;
+  int num_neuron_inputs = 4;
 
-    for (i = 0; i < 2; i++) {
-      neurons[i] = Neuron_create(8);
-      printf("neurons[%d]->bias: %f\n", i, neurons[i]->bias);
-      for (int j = 0; j < 8; j++) {
-        printf("neurons[%d]->weights[%d]: %f\n", i, j, neurons[i]->weights[j]);
-        printf("neurons[%d]->inputs[%d]: %f\n", i, j, neurons[i]->inputs[j]);
+  struct Layer *layers[num_layers];
+
+  int l, nn, nni;
+
+  for (l = 0; l < num_layers; l++) {
+
+    layers[l] = Layer_create(num_neurons, num_neuron_inputs);
+
+    for (nn = 0; nn < num_neurons; nn++) {
+
+      printf("\nlayers[%d]->neurons[%d]->bias: %f\n\n", l + 1, nn + 1,
+             layers[l]->neurons[nn]->bias);
+
+      for (nni = 0; nni < num_neuron_inputs; nni++) {
+        printf("layers[%d]->neurons[%d]->weights[%d]: %f\n", l + 1, nn + 1,
+               nni + 1, layers[l]->neurons[nn]->weights[nni]);
       }
-    }
+      printf("\n");
 
-    for (i = 0; i < 2; i++) {
-      Neuron_destroy(neurons[i]);
-    }
-  */
-
-  struct Layer *layers[2];
-
-  int i;
-
-  for (i = 0; i < 2; i++) {
-    layers[i] = Layer_create(8, 2);
-    printf("layers[%d]->neurons[%d]->bias: %f\n", i, i,
-           layers[i]->neurons[i]->bias);
-    for (int j = 0; j < 8; j++) {
-      printf("layers[%d]->neurons[%d]->weights[%d]: %f\n", i, i, j,
-             layers[i]->neurons[i]->weights[j]);
-      printf("layers[%d]->neurons[%d]->inputs[%d]: %f\n", i, i, j,
-             layers[i]->neurons[i]->inputs[j]);
+      for (nni = 0; nni < num_neuron_inputs; nni++) {
+        printf("layers[%d]->neurons[%d]->inputs[%d]: %f\n", l + 1, nn + 1,
+               nni + 1, layers[l]->neurons[nn]->inputs[nni]);
+      }
+      printf("\n");
     }
   }
-  /*
-    for (i = 0; i < 2; i++) {
-      Neuron_destroy(neurons[i]);
-    }
-    */
 
-  for (i = 0; i < 2; i++) {
-    Layer_destroy(layers[i]);
+  for (l = 0; l < num_layers; l++) {
+    Layer_destroy(layers[l]);
   }
 
   return 0;
