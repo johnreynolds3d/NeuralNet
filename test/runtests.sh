@@ -1,1 +1,1 @@
-valgrind --leak-check=yes -s ../bin/linux/neuralnet
+valgrind --leak-check=yes -s ./bin/linux/neuralnet
