@@ -1,4 +1,4 @@
-#include "../libs/headers/neuralnet.h"
+#include "../lib/headers/neuralnet.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
