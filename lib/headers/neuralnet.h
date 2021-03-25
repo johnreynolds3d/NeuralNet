@@ -15,10 +15,28 @@ struct Layer {
   struct Neuron **neurons;
 };
 
-extern struct Neuron *Neuron_create(int num_inputs);
-extern struct Layer *Layer_create(int num_neurons, int num_neuron_inputs);
+struct NeuralNet {
+  int num_inputs;
+  int num_outputs;
+  int num_hidden_layers;
+  int num_neurons_per_hidden_layer;
+  double alpha;
+  struct Layer **layers;
+};
 
-extern void Neuron_destroy(struct Neuron *neuron);
-extern void Layer_destroy(struct Layer *layer);
+struct Neuron *Neuron_create(int num_inputs);
+
+struct Layer *Layer_create(int num_neurons, int num_neuron_inputs);
+
+struct NeuralNet *NeuralNet_create(int num_inputs, int num_outputs,
+                                   int num_hidden_layers,
+                                   int num_neurons_per_hidden_layer,
+                                   double alpha);
+
+void Neuron_destroy(struct Neuron *neuron);
+
+void Layer_destroy(struct Layer *layer);
+
+void NeuralNet_destroy(struct NeuralNet *neural_net);
 
 #endif

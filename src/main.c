@@ -13,7 +13,9 @@ int main() {
 
   struct Layer *layers[num_layers];
 
-  int l, nn, nni;
+  int l = 0;
+  int nn = 0;
+  int nni = 0;
 
   for (l = 0; l < num_layers; l++) {
 
