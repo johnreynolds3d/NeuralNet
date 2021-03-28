@@ -7,15 +7,15 @@ int main() {
 
   srand(time(NULL));
 
-  int num_layers = 2;
-  int num_neurons = 4;
-  int num_neuron_inputs = 8;
+  unsigned int num_layers = 2;
+  unsigned int num_neurons = 4;
+  unsigned int num_neuron_inputs = 8;
 
   struct Layer *layers[num_layers];
 
-  int l = 0;
-  int nn = 0;
-  int nni = 0;
+  unsigned int l = 0;
+  unsigned int nn = 0;
+  unsigned int nni = 0;
 
   for (l = 0; l < num_layers; l++) {
 
