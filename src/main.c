@@ -11,7 +11,7 @@ int main() {
   unsigned int num_neurons = 4;
   unsigned int num_neuron_inputs = 8;
 
-  struct Layer *layers[num_layers];
+  Layer *layers[num_layers];
 
   unsigned int l = 0;
   unsigned int nn = 0;

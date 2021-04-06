@@ -2,9 +2,9 @@
 #include <assert.h>
 #include <stdlib.h>
 
-struct Neuron *Neuron_create(int num_inputs) {
+Neuron *Neuron_create(int num_inputs) {
 
-  struct Neuron *neuron = calloc(1, sizeof(struct Neuron));
+  Neuron *neuron = calloc(1, sizeof(Neuron));
   assert(neuron != NULL);
 
   neuron->num_inputs = num_inputs;
@@ -27,14 +27,14 @@ struct Neuron *Neuron_create(int num_inputs) {
   return neuron;
 }
 
-struct Layer *Layer_create(int num_neurons, int num_neuron_inputs) {
+Layer *Layer_create(int num_neurons, int num_neuron_inputs) {
 
-  struct Layer *layer = calloc(1, sizeof(struct Layer));
+  Layer *layer = calloc(1, sizeof(Layer));
   assert(layer != NULL);
 
   layer->num_neurons = num_neurons;
 
-  layer->neurons = calloc(num_neurons, sizeof(struct Neuron));
+  layer->neurons = calloc(num_neurons, sizeof(Neuron));
   assert(layer->neurons != NULL);
 
   unsigned int i = 0;
@@ -46,12 +46,11 @@ struct Layer *Layer_create(int num_neurons, int num_neuron_inputs) {
   return layer;
 }
 
-struct NeuralNet *NeuralNet_create(int num_inputs, int num_outputs,
-                                   int num_hidden_layers,
-                                   int num_neurons_per_hidden_layer,
-                                   double alpha) {
+NeuralNet *NeuralNet_create(int num_inputs, int num_outputs,
+                            int num_hidden_layers,
+                            int num_neurons_per_hidden_layer, double alpha) {
 
-  struct NeuralNet *neural_net = calloc(1, sizeof(struct NeuralNet));
+  NeuralNet *neural_net = calloc(1, sizeof(NeuralNet));
   assert(neural_net != NULL);
 
   neural_net->num_inputs = num_inputs;
@@ -62,7 +61,7 @@ struct NeuralNet *NeuralNet_create(int num_inputs, int num_outputs,
 
   if (num_hidden_layers > 0) {
 
-    neural_net->layers = calloc(num_hidden_layers, sizeof(struct Layer));
+    neural_net->layers = calloc(num_hidden_layers, sizeof(Layer));
     assert(neural_net->layers != NULL);
 
     neural_net->layers[0] =
@@ -80,7 +79,7 @@ struct NeuralNet *NeuralNet_create(int num_inputs, int num_outputs,
 
   } else {
 
-    neural_net->layers = malloc(sizeof(struct Layer));
+    neural_net->layers = malloc(sizeof(Layer));
     assert(neural_net->layers != NULL);
 
     neural_net->layers[0] = Layer_create(num_outputs, num_inputs);
@@ -89,7 +88,7 @@ struct NeuralNet *NeuralNet_create(int num_inputs, int num_outputs,
   return neural_net;
 }
 
-void Neuron_destroy(struct Neuron *neuron) {
+void Neuron_destroy(Neuron *neuron) {
 
   assert(neuron != NULL);
 
@@ -102,7 +101,7 @@ void Neuron_destroy(struct Neuron *neuron) {
   free(neuron);
 }
 
-void Layer_destroy(struct Layer *layer) {
+void Layer_destroy(Layer *layer) {
 
   assert(layer != NULL && layer->neurons != NULL);
 
