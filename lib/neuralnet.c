@@ -102,6 +102,7 @@ void Layer_destroy(Layer *layer) {
   for (int i = 0; i < layer->num_neurons; i++) {
     Neuron_destroy(layer->neurons[i]);
   }
+
   free(layer->neurons);
 
   free(layer);
