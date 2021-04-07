@@ -6,8 +6,8 @@ typedef struct Neuron {
   double bias;
   double output;
   double error_gradient;
-  double *weights;
   double *inputs;
+  double *weights;
 } Neuron;
 
 typedef struct Layer {
