@@ -15,6 +15,8 @@ int main() {
 
   int l, nn, nni;
 
+  printf("\n\n");
+
   for (l = 0; l < num_layers; l++) {
 
     layers[l] = Layer_create(num_neurons, num_neuron_inputs);
@@ -41,6 +43,8 @@ int main() {
   for (l = 0; l < num_layers; l++) {
     Layer_destroy(layers[l]);
   }
+
+  printf("\n\n");
 
   return 0;
 }

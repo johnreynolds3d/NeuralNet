@@ -1,5 +1,52 @@
-## An implementation of a Neural Network in C
+# neuralnet
+
+### A basic implementation of a Neural Network in C
+
+Let's see if we can't get those pesky perceptrons to learn the logical XOR operation!
+
+## Installation
+
+  1. Clone this repository
+     ```
+     # git clone git@github.com:johnreynolds3d/neuralnet.git
+     ```
+  2. cd into the source directory
+     ```
+     # cd neuralnet 
+     ```
+  3. Run make (on Linux; not sure about Windows atm...)
+     ```
+     # make -C build/linux
+     ```
+     or, if you're on a Mac
+     ```
+     # make -C build/mac
+     ```
+  4. Then run the program (on Linux) with
+     ```
+     # ./bin/linux/neuralnet
+     ```
+     on Mac
+     ```
+     # ./bin/mac/neuralnet
+     ```
+
+## Tests
+
+I've been using Valgrind to highlight potential memory issues. 
+
+On Linux, run
+```
+# sh test/runtests.sh
+```
+
+## Credits
 
 This is a work in progress, based on Penny de Byl's fabulous https://www.udemy.com/course/machine-learning-with-unity/
 
-Let's see if we can't get those pesky Perceptrons to learn the logical XOR operation!...
+## Built with
+
+  * Pop!\_OS 20.10
+  * Vim 8.2
+  * Valgrind 3.18.0
+  * gcc 10.2.0
