@@ -19,23 +19,43 @@ typedef struct NeuralNet {
   int num_inputs;
   int num_outputs;
   int num_hidden_layers;
-  int num_neurons_per_hidden_layer;
+  int neurons_per_hidden_layer;
   double alpha;
   Layer **layers;
 } NeuralNet;
+
+typedef struct TrainingSet {
+  double *inputs;
+  double *desired_outputs;
+} TrainingSet;
 
 Neuron *Neuron_create(int num_inputs);
 
 Layer *Layer_create(int num_neurons, int num_neuron_inputs);
 
 NeuralNet *NeuralNet_create(int num_inputs, int num_outputs,
-                            int num_hidden_layers,
-                            int num_neurons_per_hidden_layer, double alpha);
+                            int num_hidden_layers, int neurons_per_hidden_layer,
+                            double alpha);
+
+TrainingSet *TrainingSet_create(double *inputs, double *desired_outputs);
+
+void Update_weights(NeuralNet *neural_net, double *desired_output,
+                    double *outputs);
+
+double Step(double value);
+
+double Sigmoid(double value);
+
+double Activation_function(double value);
+
+void Train(NeuralNet *neural_net, TrainingSet *training_set);
 
 void Neuron_destroy(Neuron *neuron);
 
 void Layer_destroy(Layer *layer);
 
 void NeuralNet_destroy(NeuralNet *neural_net);
+
+void TrainingSet_destroy(TrainingSet *training_set);
 
 #endif
