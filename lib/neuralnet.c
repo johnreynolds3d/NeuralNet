@@ -50,7 +50,7 @@ Layer *Layer_create(int num_neurons, int num_neuron_inputs) {
 
 NeuralNet *NeuralNet_create(int num_inputs, int num_outputs,
                             int num_hidden_layers, int neurons_per_hidden_layer,
-                            double alpha) {
+                            double learning_rate) {
 
   NeuralNet *neural_net = calloc(1, sizeof(NeuralNet));
   assert(neural_net != NULL);
@@ -59,10 +59,10 @@ NeuralNet *NeuralNet_create(int num_inputs, int num_outputs,
   neural_net->num_outputs = num_outputs;
   neural_net->num_hidden_layers = num_hidden_layers;
   neural_net->neurons_per_hidden_layer = neurons_per_hidden_layer;
-  neural_net->alpha = alpha;
+  neural_net->learning_rate = learning_rate;
 
   neural_net->layers = calloc(
-      (num_hidden_layers < 0) ? num_hidden_layers + 2 : 1, sizeof(Layer));
+      (num_hidden_layers > 0) ? num_hidden_layers + 2 : 1, sizeof(Layer));
   assert(neural_net->layers != NULL);
 
   if (num_hidden_layers > 0) {
@@ -88,24 +88,22 @@ NeuralNet *NeuralNet_create(int num_inputs, int num_outputs,
   return neural_net;
 }
 
-TrainingSet *TrainingSet_create(double *inputs, double *desired_outputs) {
+TrainingSet *TrainingSet_create(int num_inputs, double *inputs, int num_outputs,
+                                double *desired_outputs) {
 
   assert(inputs != NULL && desired_outputs != NULL);
 
   TrainingSet *training_set = calloc(1, sizeof(TrainingSet));
   assert(training_set != NULL);
 
-  training_set->inputs =
-      calloc(sizeof(inputs) / sizeof(inputs[0]), sizeof(inputs[0]));
+  training_set->inputs = calloc(num_inputs, sizeof(double));
   assert(training_set->inputs != NULL);
 
-  training_set->desired_outputs =
-      calloc(sizeof(desired_outputs) / sizeof(desired_outputs[0]),
-             sizeof(desired_outputs[0]));
+  training_set->desired_outputs = calloc(num_outputs, sizeof(double));
   assert(training_set->desired_outputs != NULL);
 
-  training_set->inputs = inputs;
-  training_set->desired_outputs = desired_outputs;
+  memcpy(training_set->inputs, inputs, num_inputs);
+  memcpy(training_set->desired_outputs, desired_outputs, num_outputs);
 
   return training_set;
 }
@@ -152,19 +150,20 @@ void Update_weights(NeuralNet *neural_net, double *desired_output,
 
           error = desired_output[j] - outputs[j];
           neural_net->layers[i]->neurons[j]->weights[k] +=
-              neural_net->alpha * neural_net->layers[i]->neurons[j]->inputs[k] *
-              error;
+              neural_net->learning_rate *
+              neural_net->layers[i]->neurons[j]->inputs[k] * error;
 
         } else {
 
           neural_net->layers[i]->neurons[j]->weights[k] +=
-              neural_net->alpha * neural_net->layers[i]->neurons[j]->inputs[k] *
+              neural_net->learning_rate *
+              neural_net->layers[i]->neurons[j]->inputs[k] *
               neural_net->layers[i]->neurons[j]->error_gradient;
         }
       }
 
       neural_net->layers[i]->neurons[j]->bias +=
-          neural_net->alpha * -1 *
+          neural_net->learning_rate * -1 *
           neural_net->layers[i]->neurons[j]->error_gradient;
     }
   }
@@ -255,8 +254,11 @@ void NeuralNet_destroy(NeuralNet *neural_net) {
 
   assert(neural_net != NULL);
 
-  for (int i = 0; i < neural_net->num_hidden_layers; i++) {
-    free(neural_net->layers[i]);
+  for (int i = 0; i < ((neural_net->num_hidden_layers > 0)
+                           ? neural_net->num_hidden_layers + 2
+                           : 1);
+       i++) {
+    Layer_destroy(neural_net->layers[i]);
   }
   free(neural_net->layers);
 

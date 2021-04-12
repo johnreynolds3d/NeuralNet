@@ -20,7 +20,7 @@ typedef struct NeuralNet {
   int num_outputs;
   int num_hidden_layers;
   int neurons_per_hidden_layer;
-  double alpha;
+  double learning_rate;
   Layer **layers;
 } NeuralNet;
 
@@ -35,9 +35,10 @@ Layer *Layer_create(int num_neurons, int num_neuron_inputs);
 
 NeuralNet *NeuralNet_create(int num_inputs, int num_outputs,
                             int num_hidden_layers, int neurons_per_hidden_layer,
-                            double alpha);
+                            double learning_rate);
 
-TrainingSet *TrainingSet_create(double *inputs, double *desired_outputs);
+TrainingSet *TrainingSet_create(int num_inputs, double *inputs, int num_outputs,
+                                double *desired_outputs);
 
 void Update_weights(NeuralNet *neural_net, double *desired_output,
                     double *outputs);
