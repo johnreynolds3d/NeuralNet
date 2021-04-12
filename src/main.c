@@ -9,24 +9,46 @@ int main() {
 
   srand(time(NULL));
 
-  // training data for logical XOR operation
+  /*
+  printf("\n\n  Training for logical AND operation\n");
+  double inputs[4][2] = {{0, 0}, {0, 1}, {1, 0}, {1, 1}};
+  double desired_outputs[4][1] = {{0}, {0}, {0}, {1}};
+
+  printf("\n\n  Training for logical NAND operation\n");
+  double inputs[4][2] = {{0, 0}, {0, 1}, {1, 0}, {1, 1}};
+  double desired_outputs[4][1] = {{1}, {1}, {1}, {0}};
+  */
+
+  printf("\n\n  Training for logical OR operation\n");
+  double inputs[4][2] = {{0, 0}, {0, 1}, {1, 0}, {1, 1}};
+  double desired_outputs[4][1] = {{0}, {1}, {1}, {1}};
+
+  /*
+  printf("\n\n  Training for logical NOR operation\n");
+  double inputs[4][2] = {{0, 0}, {0, 1}, {1, 0}, {1, 1}};
+  double desired_outputs[4][1] = {{1}, {0}, {0}, {0}};
+
+  printf("\n\n  Training for logical XOR operation\n");
   double inputs[4][2] = {{0, 0}, {0, 1}, {1, 0}, {1, 1}};
   double desired_outputs[4][1] = {{0}, {1}, {1}, {0}};
+
+  printf("\n\n  Training for logical XNOR operation\n");
+  double inputs[4][2] = {{0, 0}, {0, 1}, {1, 0}, {1, 1}};
+  double desired_outputs[4][1] = {{1}, {0}, {0}, {1}};
+  */
 
   int num_inputs = sizeof(inputs[0]) / sizeof(inputs[0][0]);
   int num_outputs = sizeof(desired_outputs[0]) / sizeof(desired_outputs[0][0]);
   int num_hidden_layers = 2;
   int neurons_per_hidden_layer = 2;
 
-  double learning_rate = 0.8;
+  double learning_rate = 0.5;
 
-  int epochs = pow(2, 12);
+  int epochs = pow(2, 16);
 
   int num_training_sets = sizeof(inputs) / sizeof(inputs[0]);
 
   TrainingSet *training_sets[num_training_sets];
-
-  printf("\n\n");
 
   int i, j, k;
 
@@ -35,6 +57,7 @@ int main() {
     training_sets[i] = TrainingSet_create(num_inputs, inputs[i], num_outputs,
                                           desired_outputs[i]);
 
+    /*
     printf("\n\ttraining_set[%d]->inputs[0]:\t\t% d\n", i,
            (int)training_sets[i]->inputs[0]);
 
@@ -43,6 +66,7 @@ int main() {
 
     printf("\ttraining_set[%d]->desired_outputs[0]:\t% d\n", i,
            (int)training_sets[i]->desired_outputs[0]);
+  */
   }
 
   NeuralNet *neural_net =
@@ -52,7 +76,7 @@ int main() {
   int num_layers =
       neural_net->num_hidden_layers > 0 ? neural_net->num_hidden_layers + 2 : 1;
 
-  printf("\n\n\tneural_net->num_inputs:\t\t\t% d\n", neural_net->num_inputs);
+  printf("\n\tneural_net->num_inputs:\t\t\t% d\n", neural_net->num_inputs);
 
   printf("\tneural_net->num_outputs:\t\t% d\n", neural_net->num_outputs);
 
@@ -62,7 +86,7 @@ int main() {
   printf("\tneural_net->neurons_per_hidden_layer:\t% d\n",
          neural_net->neurons_per_hidden_layer);
 
-  printf("\tneural_net->learning_rate:\t\t%9f\n\n", neural_net->learning_rate);
+  printf("\tneural_net->learning_rate:\t\t%9f\n", neural_net->learning_rate);
 
   /*
 for (i = 0; i < num_layers; i++) {
@@ -92,7 +116,7 @@ printf("\n");
 }
   */
 
-  printf("\n\tTraining epochs:\t\t\t %d\n", epochs);
+  printf("\n\n    Training epochs:\t\t\t\t %d\n", epochs);
 
   double outputs[num_outputs];
   double sum_square_error;
@@ -114,11 +138,12 @@ printf("\n");
     Train(neural_net, training_sets[3], outputs);
     sum_square_error += pow(outputs[0] - 0, 2);
   }
-  printf("\n\n\tsum_square_error:\t\t\t%9f\n\n", sum_square_error);
+  printf("\n\tsum_square_error:\t\t\t%9f\n\n", sum_square_error);
 
   // final training and printing of results
+  printf("\n    Results:\n");
   Train(neural_net, training_sets[0], outputs);
-  printf("\t[0 0] %f\n", outputs[0]);
+  printf("\n\t[0 0] %f\n", outputs[0]);
 
   Train(neural_net, training_sets[1], outputs);
   printf("\t[1 0] %f\n", outputs[0]);
