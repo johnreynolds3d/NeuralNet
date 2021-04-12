@@ -47,9 +47,25 @@ double Step(double value);
 
 double Sigmoid(double value);
 
+double BinaryStep(double value);
+
+double TanH(double value);
+
+double ReLu(double value);
+
+double LeakyReLu(double value);
+
+double Sinusoid(double value);
+
+double ArcTan(double value);
+
+double SoftSign(double value);
+
+double Activation_function_output_layer(double value);
+
 double Activation_function(double value);
 
-void Train(NeuralNet *neural_net, TrainingSet *training_set);
+void Train(NeuralNet *neural_net, TrainingSet *training_set, double *outputs);
 
 void Neuron_destroy(Neuron *neuron);
 

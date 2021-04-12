@@ -44,7 +44,9 @@ int main() {
   NeuralNet *neural_net =
       NeuralNet_create(num_inputs, num_outputs, num_hidden_layers,
                        neurons_per_hidden_layer, learning_rate);
-  assert(neural_net != NULL);
+
+  int num_layers =
+      neural_net->num_hidden_layers > 0 ? neural_net->num_hidden_layers + 2 : 1;
 
   printf("\n\tneural_net->num_inputs:\t\t\t% d\n", neural_net->num_inputs);
   printf("\tneural_net->num_outputs:\t\t% d\n", neural_net->num_outputs);
@@ -54,10 +56,7 @@ int main() {
          neural_net->neurons_per_hidden_layer);
   printf("\tneural_net->learning_rate:\t\t%9f\n\n", neural_net->learning_rate);
 
-  for (i = 0; i < ((neural_net->num_hidden_layers > 0)
-                       ? neural_net->num_hidden_layers + 2
-                       : 1);
-       i++) {
+  for (i = 0; i < num_layers; i++) {
     for (j = 0; j < neural_net->layers[i]->num_neurons; j++) {
       printf("\tlayers[%d]->neurons[%d]->bias:\t\t%9f\n", i, j,
              neural_net->layers[i]->neurons[j]->bias);
@@ -82,42 +81,43 @@ int main() {
   printf("\n\n");
 
   /*
-    double outputs[num_outputs];
-    double sum_square_error;
+  double outputs[num_outputs];
+  double sum_square_error;
 
-    for (i = 0; i < 1; i++) {
+  // it's training time!
+  for (i = 0; i < 8; i++) {
 
-      sum_square_error = 0;
+    sum_square_error = 0;
 
-      Train(neural_net, training_sets[0]);
-      sum_square_error += pow(outputs[0] - 0, 2);
+    Train(neural_net, training_sets[0], outputs);
+    sum_square_error += pow(outputs[0] - 0, 2); // (actual - desired output)^2
 
-      printf("trying to train training_sets[%d]..\n", i);
+    Train(neural_net, training_sets[1], outputs);
+    sum_square_error += pow(outputs[0] - 1, 2);
 
-      Train(neural_net, training_sets[1]);
-      sum_square_error += pow(outputs[0] - 1, 2);
+    Train(neural_net, training_sets[2], outputs);
+    sum_square_error += pow(outputs[0] - 1, 2);
 
-      Train(neural_net, training_sets[2]);
-      sum_square_error += pow(outputs[0] - 1, 2);
+    Train(neural_net, training_sets[3], outputs);
+    sum_square_error += pow(outputs[0] - 0, 2);
+  }
+  printf("\n\nsum_square_error:\t%f\n", sum_square_error);
 
-      Train(neural_net, training_sets[3]);
-      sum_square_error += pow(outputs[0] - 0, 2);
-    }
-    printf("\n\nsum_square_error:\t%f\n", sum_square_error);
+  // final training and printing of results
+  Train(neural_net, training_sets[0], outputs);
+  printf("[0 0] %f\n", outputs[0]);
 
-    Train(neural_net, training_sets[0]);
-    printf("[0 0] %f\n", outputs[0]);
+  Train(neural_net, training_sets[1], outputs);
+  printf("[1 0] %f\n", outputs[0]);
 
-    Train(neural_net, training_sets[1]);
-    printf("[1 0] %f\n", outputs[0]);
+  Train(neural_net, training_sets[2], outputs);
+  printf("[0 1] %f\n", outputs[0]);
 
-    Train(neural_net, training_sets[2]);
-    printf("[0 1] %f\n", outputs[0]);
+  Train(neural_net, training_sets[3], outputs);
+  printf("[1 1] %f\n\n\n", outputs[0]);
+  */
 
-    Train(neural_net, training_sets[3]);
-    printf("[1 1] %f\n\n\n", outputs[0]);
-    */
-
+  // cleaning up
   for (i = 0; i < num_training_sets; i++) {
     TrainingSet_destroy(training_sets[i]);
   }
