@@ -205,7 +205,7 @@ double Sigmoid(double value) {
 
 double Sinusoid(double value) { return sin((float)value); }
 
-double SoftSign(double value) { return value / (1 + abs((float)value)); }
+double SoftSign(double value) { return value / (1 + fabsf((float)value)); }
 
 double TanH(double value) { return 2 * Sigmoid(2 * value) - 1; }
 

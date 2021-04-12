@@ -18,11 +18,15 @@ int main() {
   int num_hidden_layers = 2;
   int neurons_per_hidden_layer = 2;
 
-  double learning_rate = 0.9;
+  double learning_rate = 0.8;
+
+  int epochs = pow(2, 12);
 
   int num_training_sets = sizeof(inputs) / sizeof(inputs[0]);
 
   TrainingSet *training_sets[num_training_sets];
+
+  printf("\n\n");
 
   int i, j, k;
 
@@ -60,37 +64,41 @@ int main() {
 
   printf("\tneural_net->learning_rate:\t\t%9f\n\n", neural_net->learning_rate);
 
-  for (i = 0; i < num_layers; i++) {
+  /*
+for (i = 0; i < num_layers; i++) {
 
-    for (j = 0; j < neural_net->layers[i]->num_neurons; j++) {
+for (j = 0; j < neural_net->layers[i]->num_neurons; j++) {
 
-      printf("\tlayers[%d]->neurons[%d]->bias:\t\t%9f\n", i, j,
-             neural_net->layers[i]->neurons[j]->bias);
+printf("\tlayers[%d]->neurons[%d]->bias:\t\t%9f\n", i, j,
+       neural_net->layers[i]->neurons[j]->bias);
 
-      printf("\tlayers[%d]->neurons[%d]->output:\t\t%9f\n", i, j,
-             neural_net->layers[i]->neurons[j]->output);
+printf("\tlayers[%d]->neurons[%d]->output:\t\t%9f\n", i, j,
+       neural_net->layers[i]->neurons[j]->output);
 
-      printf("\tlayers[%d]->neurons[%d]->error_gradient:\t%9f\n", i, j,
-             neural_net->layers[i]->neurons[j]->error_gradient);
+printf("\tlayers[%d]->neurons[%d]->error_gradient:\t%9f\n", i, j,
+       neural_net->layers[i]->neurons[j]->error_gradient);
 
-      for (k = 0; k < neural_net->layers[i]->neurons[j]->num_inputs; k++) {
-        printf("\tlayers[%d]->neurons[%d]->weights[%d]:\t%9f\n", i, j, k,
-               neural_net->layers[i]->neurons[j]->weights[k]);
-      }
+for (k = 0; k < neural_net->layers[i]->neurons[j]->num_inputs; k++) {
+  printf("\tlayers[%d]->neurons[%d]->weights[%d]:\t%9f\n", i, j, k,
+         neural_net->layers[i]->neurons[j]->weights[k]);
+}
 
-      for (k = 0; k < neural_net->layers[i]->neurons[j]->num_inputs; k++) {
-        printf("\tlayers[%d]->neurons[%d]->inputs[%d]:\t%9f\n", i, j, k,
-               neural_net->layers[i]->neurons[j]->inputs[k]);
-      }
-      printf("\n");
-    }
-  }
+for (k = 0; k < neural_net->layers[i]->neurons[j]->num_inputs; k++) {
+  printf("\tlayers[%d]->neurons[%d]->inputs[%d]:\t%9f\n", i, j, k,
+         neural_net->layers[i]->neurons[j]->inputs[k]);
+}
+printf("\n");
+}
+}
+  */
+
+  printf("\n\tTraining epochs:\t\t\t %d\n", epochs);
 
   double outputs[num_outputs];
   double sum_square_error;
 
   // it's training time!
-  for (i = 0; i < 1024; i++) {
+  for (i = 0; i < epochs; i++) {
 
     sum_square_error = 0;
 
