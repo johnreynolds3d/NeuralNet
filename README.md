@@ -1,8 +1,8 @@
 # neuralnet
 
-### A basic implementation of a Neural Network in C
+### A basic implementation of an Artificial Neural Network in C
 
-Let's see if we can't get those pesky perceptrons to learn the logical XOR operation!
+Let's see if we can't round up a whole BUNCH of those pesky Perceptrons, and get 'em to learn the logical XOR operation! (and a few other ones, while we're at it...)
 
 ## Installation
 
