@@ -39,42 +39,14 @@ int main() {
 
   int num_inputs = sizeof(inputs[0]) / sizeof(inputs[0][0]);
   int num_outputs = sizeof(desired_outputs[0]) / sizeof(desired_outputs[0][0]);
-  int num_hidden_layers = 2;
+  int num_hidden_layers = 1;
   int neurons_per_hidden_layer = 2;
 
-  double learning_rate = 0.5;
-
-  int epochs = pow(2, 16);
-
-  int num_training_sets = sizeof(inputs) / sizeof(inputs[0]);
-
-  TrainingSet *training_sets[num_training_sets];
-
-  int i, j, k;
-
-  for (i = 0; i < num_training_sets; i++) {
-
-    training_sets[i] = TrainingSet_create(num_inputs, inputs[i], num_outputs,
-                                          desired_outputs[i]);
-
-    /*
-    printf("\n\ttraining_set[%d]->inputs[0]:\t\t% d\n", i,
-           (int)training_sets[i]->inputs[0]);
-
-    printf("\ttraining_set[%d]->inputs[1]:\t\t% d\n", i,
-           (int)training_sets[i]->inputs[1]);
-
-    printf("\ttraining_set[%d]->desired_outputs[0]:\t% d\n", i,
-           (int)training_sets[i]->desired_outputs[0]);
-  */
-  }
+  double learning_rate = 0.8;
 
   NeuralNet *neural_net =
       NeuralNet_create(num_inputs, num_outputs, num_hidden_layers,
                        neurons_per_hidden_layer, learning_rate);
-
-  int num_layers =
-      neural_net->num_hidden_layers > 0 ? neural_net->num_hidden_layers + 2 : 1;
 
   printf("\n\tneural_net->num_inputs:\t\t\t% d\n", neural_net->num_inputs);
 
@@ -86,14 +58,19 @@ int main() {
   printf("\tneural_net->neurons_per_hidden_layer:\t% d\n",
          neural_net->neurons_per_hidden_layer);
 
-  printf("\tneural_net->learning_rate:\t\t%9f\n", neural_net->learning_rate);
+  printf("\tneural_net->learning_rate:\t\t%9f\n\n", neural_net->learning_rate);
+
+  int num_layers =
+      neural_net->num_hidden_layers > 0 ? neural_net->num_hidden_layers + 2 : 1;
+
+  int i, j, k;
 
   /*
 for (i = 0; i < num_layers; i++) {
 
 for (j = 0; j < neural_net->layers[i]->num_neurons; j++) {
 
-printf("\tlayers[%d]->neurons[%d]->bias:\t\t%9f\n", i, j,
+printf("\n\tlayers[%d]->neurons[%d]->bias:\t\t%9f\n", i, j,
        neural_net->layers[i]->neurons[j]->bias);
 
 printf("\tlayers[%d]->neurons[%d]->output:\t\t%9f\n", i, j,
@@ -111,17 +88,38 @@ for (k = 0; k < neural_net->layers[i]->neurons[j]->num_inputs; k++) {
   printf("\tlayers[%d]->neurons[%d]->inputs[%d]:\t%9f\n", i, j, k,
          neural_net->layers[i]->neurons[j]->inputs[k]);
 }
-printf("\n");
 }
 }
   */
 
-  printf("\n\n    Training epochs:\t\t\t\t %d\n", epochs);
+  int num_training_sets = sizeof(inputs) / sizeof(inputs[0]);
+
+  TrainingSet *training_sets[num_training_sets];
+
+  for (i = 0; i < num_training_sets; i++) {
+
+    training_sets[i] = TrainingSet_create(num_inputs, inputs[i], num_outputs,
+                                          desired_outputs[i]);
+
+    /*
+printf("\n\ttraining_set[%d]->inputs[0]:\t\t% d\n", i,
+(int)training_sets[i]->inputs[0]);
+
+printf("\ttraining_set[%d]->inputs[1]:\t\t% d\n", i,
+(int)training_sets[i]->inputs[1]);
+
+printf("\ttraining_set[%d]->desired_outputs[0]:\t% d\n", i,
+(int)training_sets[i]->desired_outputs[0]);
+                             */
+  }
 
   double outputs[num_outputs];
   double sum_square_error;
 
-  // it's training time!
+  int epochs = pow(2, 8);
+
+  printf("\n    Training epochs:\t\t\t\t %d\n", epochs);
+
   for (i = 0; i < epochs; i++) {
 
     sum_square_error = 0;
@@ -142,6 +140,7 @@ printf("\n");
 
   // final training and printing of results
   printf("\n    Results:\n");
+
   Train(neural_net, training_sets[0], outputs);
   printf("\n\t[0 0] %f\n", outputs[0]);
 
@@ -154,12 +153,11 @@ printf("\n");
   Train(neural_net, training_sets[3], outputs);
   printf("\t[1 1] %f\n\n\n", outputs[0]);
 
-  // cleaning up
+  NeuralNet_destroy(neural_net);
+
   for (i = 0; i < num_training_sets; i++) {
     TrainingSet_destroy(training_sets[i]);
   }
-
-  NeuralNet_destroy(neural_net);
 
   return 0;
 }

@@ -11,11 +11,8 @@ Neuron *Neuron_create(int num_inputs) {
   assert(neuron != NULL);
 
   neuron->num_inputs = num_inputs;
-
   neuron->bias = (double)rand() / RAND_MAX * 2.0 - 1.0;
-
   neuron->output = 0;
-
   neuron->error_gradient = 0;
 
   neuron->inputs = calloc(num_inputs, sizeof(double));
