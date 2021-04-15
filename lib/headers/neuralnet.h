@@ -26,7 +26,7 @@ typedef struct NeuralNet {
 
 typedef struct TrainingSet {
   double *inputs;
-  double *desired_outputs;
+  double *desired_output;
 } TrainingSet;
 
 Neuron *Neuron_create(int num_inputs);
@@ -38,10 +38,10 @@ NeuralNet *NeuralNet_create(int num_inputs, int num_outputs,
                             double learning_rate);
 
 TrainingSet *TrainingSet_create(int num_inputs, double *inputs, int num_outputs,
-                                double *desired_outputs);
+                                double *desired_output);
 
 void Update_weights(NeuralNet *neural_net, double *desired_output,
-                    double *outputs);
+                    double *result);
 
 double Step(double value);
 
@@ -65,7 +65,7 @@ double Activation_function_output_layer(double value);
 
 double Activation_function(double value);
 
-void Train(NeuralNet *neural_net, TrainingSet *training_set, double *outputs);
+void Train(NeuralNet *neural_net, TrainingSet *training_set, double *result);
 
 void Neuron_destroy(Neuron *neuron);
 
