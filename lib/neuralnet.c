@@ -157,7 +157,6 @@ void Update_weights(NeuralNet *neural_net, double *desired_output,
               neural_net->layers[i + 1]->neurons[p]->error_gradient *
               neural_net->layers[i + 1]->neurons[p]->weights[j];
         }
-
         neural_net->layers[i]->neurons[j]->error_gradient *= error_gradient_sum;
       }
 
@@ -199,7 +198,7 @@ double Sigmoid(double value) { return 1 / (1 + exp(-value)); }
 
 double Sinusoid(double value) { return sin(value); }
 
-double SoftSign(double value) { return value / (1 + abs(value)); }
+double SoftSign(double value) { return value / (1 + fabs(value)); }
 
 double TanH(double value) { return 2 * Sigmoid(2 * value) - 1; }
 

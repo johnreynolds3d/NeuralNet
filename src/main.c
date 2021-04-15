@@ -17,33 +17,30 @@ int main() {
   printf("\n\n  Training for logical NAND operation\n");
   double inputs[4][2] = {{0.0, 0.0}, {0.0, 1.0}, {1.0, 0.0}, {1.0, 1.0}};
   double desired_outputs[4][1] = {{1.0}, {1.0}, {1.0}, {0.0}};
-  */
 
   printf("\n\n  Training for logical OR operation\n");
   double inputs[4][2] = {{0.0, 0.0}, {0.0, 1.0}, {1.0, 0.0}, {1.0, 1.0}};
   double desired_outputs[4][1] = {{0.0}, {1.0}, {1.0}, {1.0}};
 
-  /*
   printf("\n\n  Training for logical NOR operation\n");
   double inputs[4][2] = {{0.0, 0.0}, {0.0, 1.0}, {1.0, 0.0}, {1.0, 1.0}};
   double desired_outputs[4][1] = {{1.0}, {0.0}, {0.0}, {0.0}};
+  */
 
   printf("\n\n  Training for logical XOR operation\n");
   double inputs[4][2] = {{0.0, 0.0}, {0.0, 1.0}, {1.0, 0.0}, {1.0, 1.0}};
   double desired_outputs[4][1] = {{0.0}, {1.0}, {1.0}, {0.0}};
 
-  printf("\n\n  Training for logical XNOR operation\n");
-  double inputs[4][2] = {{0.0, 0.0}, {0.0, 1.0}, {1.0, 0.0}, {1.0, 1.0}};
-  double desired_outputs[4][1] = {{1.0}, {0.0}, {0.0}, {1.0}};
-  */
   /*
+printf("\n\n  Training for logical XNOR operation\n");
+double inputs[4][2] = {{0.0, 0.0}, {0.0, 1.0}, {1.0, 0.0}, {1.0, 1.0}};
+double desired_outputs[4][1] = {{1.0}, {0.0}, {0.0}, {1.0}};
+*/
+
   int num_inputs = sizeof(inputs[0]) / sizeof(inputs[0][0]);
   int num_outputs = sizeof(desired_outputs[0]) / sizeof(desired_outputs[0][0]);
-  */
-  int num_inputs = 2;
-  int num_outputs = 1;
-  int num_hidden_layers = 1;
-  int neurons_per_hidden_layer = 2;
+  int num_hidden_layers = 2;
+  int neurons_per_hidden_layer = 4;
 
   double learning_rate = 0.8;
 
@@ -94,8 +91,8 @@ for (k = 0; k < neural_net->layers[i]->neurons[j]->num_inputs; k++) {
 }
 }
   */
-  // int num_training_sets = sizeof(inputs) / sizeof(inputs[0]);
-  int num_training_sets = 4;
+
+  int num_training_sets = sizeof(inputs) / sizeof(inputs[0]);
 
   TrainingSet *training_sets[num_training_sets];
 
