@@ -15,7 +15,7 @@ Neuron *Neuron_create(int num_inputs) {
   neuron->output = 0.0;
   neuron->error_gradient = 0.0;
 
-  neuron->inputs = malloc(num_inputs * sizeof(double));
+  neuron->inputs = calloc(num_inputs, sizeof(double));
   assert(neuron->inputs != NULL);
 
   neuron->weights = malloc(num_inputs * sizeof(double));
@@ -53,18 +53,15 @@ NeuralNet *NeuralNet_create(int num_inputs, int num_outputs,
   assert(neural_net != NULL);
 
   neural_net->num_inputs = num_inputs;
-
   neural_net->num_outputs = num_outputs;
-
   neural_net->num_hidden_layers = num_hidden_layers;
-
   neural_net->neurons_per_hidden_layer = neurons_per_hidden_layer;
-
   neural_net->learning_rate = learning_rate;
 
-  neural_net->layers = malloc(
-      (num_hidden_layers > 0 ? num_hidden_layers + 2 : 1) * sizeof(Layer));
+  neural_net->layers = malloc((num_hidden_layers + 1) * sizeof(Layer));
   assert(neural_net->layers != NULL);
+
+  int i = 0, j = 0, k = 0;
 
   if (num_hidden_layers > 0) {
 
@@ -72,12 +69,13 @@ NeuralNet *NeuralNet_create(int num_inputs, int num_outputs,
     neural_net->layers[0] = Layer_create(neurons_per_hidden_layer, num_inputs);
 
     // create hidden layers
-    for (int i = 0; i < num_hidden_layers; i++) {
+    for (i = 0; i < num_hidden_layers - 1; i++) {
+
       neural_net->layers[i + 1] =
           Layer_create(neurons_per_hidden_layer, neurons_per_hidden_layer);
     }
     // create output layer
-    neural_net->layers[num_hidden_layers + 1] =
+    neural_net->layers[num_hidden_layers] =
         Layer_create(num_outputs, neurons_per_hidden_layer);
 
   } else {
@@ -85,6 +83,17 @@ NeuralNet *NeuralNet_create(int num_inputs, int num_outputs,
     // create single layer
     neural_net->layers[0] = Layer_create(num_outputs, num_inputs);
   }
+
+  printf("\n\tneural_net->num_inputs:\t\t\t %d\n", neural_net->num_inputs);
+  printf("\tneural_net->num_outputs:\t\t %d\n", neural_net->num_outputs);
+
+  printf("\tneural_net->num_hidden_layers:\t\t %d\n",
+         neural_net->num_hidden_layers);
+
+  printf("\tneural_net->neurons_per_hidden_layer:\t %d\n",
+         neural_net->neurons_per_hidden_layer);
+
+  printf("\tneural_net->learning_rate:\t\t%9f\n\n", neural_net->learning_rate);
 
   return neural_net;
 }
@@ -122,21 +131,17 @@ void Update_weights(NeuralNet *neural_net, double *desired_output,
   assert(neural_net != NULL && desired_output != NULL && result != NULL);
 
   double error = 0.0;
-  double error_gradient_sum = 0.0;
-
-  int num_layers =
-      neural_net->num_hidden_layers > 0 ? neural_net->num_hidden_layers + 2 : 1;
 
   int i = 0, j = 0, k = 0, p = 0;
 
   // loop through layers from last to first (backpropagation)
-  for (i = num_layers - 1; i >= 0; i--) {
+  for (i = neural_net->num_hidden_layers; i >= 0; i--) {
 
     // loop through neurons
     for (j = 0; j < neural_net->layers[i]->num_neurons; j++) {
 
       // if output layer, compute error
-      if (i == num_layers - 1) {
+      if (i == neural_net->num_hidden_layers) {
 
         error = desired_output[j] - result[j];
 
@@ -150,9 +155,10 @@ void Update_weights(NeuralNet *neural_net, double *desired_output,
             neural_net->layers[i]->neurons[j]->output *
             (1 - neural_net->layers[i]->neurons[j]->output);
 
-        error_gradient_sum = 0.0;
+        double error_gradient_sum = 0.0;
 
         for (p = 0; p < neural_net->layers[i + 1]->num_neurons; p++) {
+
           error_gradient_sum +=
               neural_net->layers[i + 1]->neurons[p]->error_gradient *
               neural_net->layers[i + 1]->neurons[p]->weights[j];
@@ -164,7 +170,7 @@ void Update_weights(NeuralNet *neural_net, double *desired_output,
       for (k = 0; k < neural_net->layers[i]->neurons[j]->num_inputs; k++) {
 
         // if output layer, compute error
-        if (i == num_layers - 1) {
+        if (i == neural_net->num_hidden_layers) {
 
           error = desired_output[j] - result[j];
 
@@ -173,12 +179,14 @@ void Update_weights(NeuralNet *neural_net, double *desired_output,
               neural_net->layers[i]->neurons[j]->inputs[k] * error;
 
         } else {
+
           neural_net->layers[i]->neurons[j]->weights[k] +=
               neural_net->learning_rate *
               neural_net->layers[i]->neurons[j]->inputs[k] *
               neural_net->layers[i]->neurons[j]->error_gradient;
         }
       }
+
       neural_net->layers[i]->neurons[j]->bias +=
           neural_net->learning_rate * -1 *
           neural_net->layers[i]->neurons[j]->error_gradient;
@@ -214,15 +222,13 @@ void Train(NeuralNet *neural_net, TrainingSet *training_set, double *result) {
 
   double training_inputs[neural_net->num_inputs];
 
+  // copy inputs into temp array
   for (i = 0; i < neural_net->num_inputs; i++) {
     training_inputs[i] = training_set->inputs[i];
   }
 
-  int num_layers =
-      neural_net->num_hidden_layers > 0 ? neural_net->num_hidden_layers + 2 : 1;
-
   // loop through layers
-  for (i = 0; i < num_layers; i++) {
+  for (i = 0; i < neural_net->num_hidden_layers + 1; i++) {
 
     // if not input layer, set inputs to previous layer's outputs
     if (i > 0) {
@@ -259,7 +265,7 @@ void Train(NeuralNet *neural_net, TrainingSet *training_set, double *result) {
       N -= neural_net->layers[i]->neurons[j]->bias;
 
       // compute output for output layer
-      if (i == num_layers - 1) {
+      if (i == neural_net->num_hidden_layers) {
 
         neural_net->layers[i]->neurons[j]->output =
             Activation_function_output_layer(N);
@@ -301,10 +307,7 @@ void NeuralNet_destroy(NeuralNet *neural_net) {
 
   assert(neural_net != NULL);
 
-  int num_layers =
-      neural_net->num_hidden_layers > 0 ? neural_net->num_hidden_layers + 2 : 1;
-
-  for (int i = 0; i < num_layers; i++) {
+  for (int i = 0; i < neural_net->num_hidden_layers + 1; i++) {
     Layer_destroy(neural_net->layers[i]);
   }
   free(neural_net->layers);
