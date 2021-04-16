@@ -70,7 +70,6 @@ NeuralNet *NeuralNet_create(int num_inputs, int num_outputs,
 
     // create hidden layers
     for (i = 0; i < num_hidden_layers - 1; i++) {
-
       neural_net->layers[i + 1] =
           Layer_create(neurons_per_hidden_layer, neurons_per_hidden_layer);
     }
@@ -84,7 +83,10 @@ NeuralNet *NeuralNet_create(int num_inputs, int num_outputs,
     neural_net->layers[0] = Layer_create(num_outputs, num_inputs);
   }
 
+  printf("\n\nNeural network parameters:\n");
+
   printf("\n\tneural_net->num_inputs:\t\t\t %d\n", neural_net->num_inputs);
+
   printf("\tneural_net->num_outputs:\t\t %d\n", neural_net->num_outputs);
 
   printf("\tneural_net->num_hidden_layers:\t\t %d\n",
@@ -93,7 +95,7 @@ NeuralNet *NeuralNet_create(int num_inputs, int num_outputs,
   printf("\tneural_net->neurons_per_hidden_layer:\t %d\n",
          neural_net->neurons_per_hidden_layer);
 
-  printf("\tneural_net->learning_rate:\t\t%9f\n\n", neural_net->learning_rate);
+  printf("\tneural_net->learning_rate:\t\t%9f\n", neural_net->learning_rate);
 
   return neural_net;
 }
@@ -150,7 +152,6 @@ void Update_weights(NeuralNet *neural_net, double *desired_output,
             result[j] * (1 - result[j]) * error;
 
       } else {
-
         neural_net->layers[i]->neurons[j]->error_gradient =
             neural_net->layers[i]->neurons[j]->output *
             (1 - neural_net->layers[i]->neurons[j]->output);
@@ -158,7 +159,6 @@ void Update_weights(NeuralNet *neural_net, double *desired_output,
         double error_gradient_sum = 0.0;
 
         for (p = 0; p < neural_net->layers[i + 1]->num_neurons; p++) {
-
           error_gradient_sum +=
               neural_net->layers[i + 1]->neurons[p]->error_gradient *
               neural_net->layers[i + 1]->neurons[p]->weights[j];
@@ -186,7 +186,6 @@ void Update_weights(NeuralNet *neural_net, double *desired_output,
               neural_net->layers[i]->neurons[j]->error_gradient;
         }
       }
-
       neural_net->layers[i]->neurons[j]->bias +=
           neural_net->learning_rate * -1 *
           neural_net->layers[i]->neurons[j]->error_gradient;
@@ -270,7 +269,9 @@ void Train(NeuralNet *neural_net, TrainingSet *training_set, double *result) {
         neural_net->layers[i]->neurons[j]->output =
             Activation_function_output_layer(N);
 
-      } else { // compute output for hidden layers
+      } else {
+
+        // compute output for hidden layers
         neural_net->layers[i]->neurons[j]->output = Activation_function(N);
       }
 
