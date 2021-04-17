@@ -35,7 +35,7 @@ int main() {
 
   double sum_square_error = 0.0;
 
-  int epochs = (int)pow(2, 10);
+  int epochs = pow(2, 18);
 
   printf("\n    Training epochs:\t\t\t\t %d\n", epochs);
 
@@ -63,7 +63,7 @@ int main() {
             pow(result[0] - training_sets[k]->desired_output[0], 2);
       }
     }
-    printf("\n\tsum_square_error:\t\t\t%9f\n\n", sum_square_error);
+    printf("\n\tsum_square_error:\t\t\t%12f\n", sum_square_error);
 
     // final training and printing of result
     printf("\n    Results:\n\n");

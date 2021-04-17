@@ -15,13 +15,19 @@ Neuron *Neuron_create(int num_inputs) {
   neuron->output = 0.0;
   neuron->error_gradient = 0.0;
 
-  neuron->inputs = calloc(num_inputs, sizeof(double));
+  neuron->inputs = malloc(num_inputs * sizeof(double));
   assert(neuron->inputs != NULL);
 
   neuron->weights = malloc(num_inputs * sizeof(double));
   assert(neuron->weights != NULL);
 
-  for (int i = 0; i < num_inputs; i++) {
+  int i = 0;
+
+  for (i = 0; i < num_inputs; i++) {
+    neuron->inputs[i] = 0.0;
+  }
+
+  for (i = 0; i < num_inputs; i++) {
     neuron->weights[i] = (double)rand() / RAND_MAX * 2.0 - 1.0;
   }
 
@@ -69,8 +75,8 @@ NeuralNet *NeuralNet_create(int num_inputs, int num_outputs,
     neural_net->layers[0] = Layer_create(neurons_per_hidden_layer, num_inputs);
 
     // create hidden layers
-    for (i = 0; i < num_hidden_layers - 1; i++) {
-      neural_net->layers[i + 1] =
+    for (i = 1; i < num_hidden_layers; i++) {
+      neural_net->layers[i] =
           Layer_create(neurons_per_hidden_layer, neurons_per_hidden_layer);
     }
     // create output layer
@@ -95,7 +101,33 @@ NeuralNet *NeuralNet_create(int num_inputs, int num_outputs,
   printf("\tneural_net->neurons_per_hidden_layer:\t %d\n",
          neural_net->neurons_per_hidden_layer);
 
-  printf("\tneural_net->learning_rate:\t\t%9f\n", neural_net->learning_rate);
+  printf("\tneural_net->learning_rate:\t\t %.1f\n", neural_net->learning_rate);
+
+  for (i = 0; i <= num_hidden_layers; i++) {
+
+    for (j = 0; j < neural_net->layers[i]->num_neurons; j++) {
+
+      printf("\n\tlayers[%d]->neurons[%d]->bias:\t\t%9f\n", i, j,
+             neural_net->layers[i]->neurons[j]->bias);
+
+      printf("\tlayers[%d]->neurons[%d]->output:\t\t%9f\n", i, j,
+             neural_net->layers[i]->neurons[j]->output);
+
+      printf("\tlayers[%d]->neurons[%d]->error_gradient:\t%9f\n", i, j,
+             neural_net->layers[i]->neurons[j]->error_gradient);
+
+      for (k = 0; k < neural_net->layers[i]->neurons[j]->num_inputs; k++) {
+        printf("\tlayers[%d]->neurons[%d]->inputs[%d]:\t%9f\n", i, j, k,
+               neural_net->layers[i]->neurons[j]->inputs[k]);
+      }
+
+      for (k = 0; k < neural_net->layers[i]->neurons[j]->num_inputs; k++) {
+        printf("\tlayers[%d]->neurons[%d]->weights[%d]:\t%9f\n", i, j, k,
+               neural_net->layers[i]->neurons[j]->weights[k]);
+      }
+    }
+  }
+  printf("\n");
 
   return neural_net;
 }
@@ -195,19 +227,25 @@ void Update_weights(NeuralNet *neural_net, double *desired_output,
 
 double ArcTan(double value) { return atan(value); }
 
-double BinaryStep(double value) { return value < 0 ? 0 : 1; }
+double BinaryStep(double value) { return value < 0.0 ? 0.0 : 1.0; }
 
-double LeakyReLu(double value) { return value < 0 ? 0.01 * value : value; }
+double ELU(double value) {
+  return value <= 0.0 ? 0.1 * (exp(value) - 1) : value;
+}
 
-double ReLu(double value) { return value > 0 ? value : 0; }
+double LeakyRELU(double value) { return value < 0.0 ? 0.01 * value : value; }
 
-double Sigmoid(double value) { return 1 / (1 + exp(-value)); }
+double RELU(double value) { return value > 0.0 ? value : 0.0; }
+
+double Sigmoid(double value) { return 1.0 / (1.0 + exp(-value)); }
 
 double Sinusoid(double value) { return sin(value); }
 
-double SoftSign(double value) { return value / (1 + fabs(value)); }
+double SoftSign(double value) { return value / (1.0 + fabs(value)); }
 
-double TanH(double value) { return 2 * Sigmoid(2 * value) - 1; }
+double TanH(double value) {
+  return (exp(value) - exp(-value)) / (exp(value) + exp(-value));
+}
 
 double Activation_function(double value) { return Sigmoid(value); }
 
@@ -224,10 +262,11 @@ void Train(NeuralNet *neural_net, TrainingSet *training_set, double *result) {
   // copy inputs into temp array
   for (i = 0; i < neural_net->num_inputs; i++) {
     training_inputs[i] = training_set->inputs[i];
+    // printf("\n\tTraining_inputs[%d}:\t%9f", i, training_inputs[i]);
   }
 
   // loop through layers
-  for (i = 0; i < neural_net->num_hidden_layers + 1; i++) {
+  for (i = 0; i <= neural_net->num_hidden_layers; i++) {
 
     // if not input layer, set inputs to previous layer's outputs
     if (i > 0) {
@@ -265,12 +304,10 @@ void Train(NeuralNet *neural_net, TrainingSet *training_set, double *result) {
 
       // compute output for output layer
       if (i == neural_net->num_hidden_layers) {
-
         neural_net->layers[i]->neurons[j]->output =
             Activation_function_output_layer(N);
 
       } else {
-
         // compute output for hidden layers
         neural_net->layers[i]->neurons[j]->output = Activation_function(N);
       }
@@ -308,7 +345,7 @@ void NeuralNet_destroy(NeuralNet *neural_net) {
 
   assert(neural_net != NULL);
 
-  for (int i = 0; i < neural_net->num_hidden_layers + 1; i++) {
+  for (int i = 0; i <= neural_net->num_hidden_layers; i++) {
     Layer_destroy(neural_net->layers[i]);
   }
   free(neural_net->layers);
