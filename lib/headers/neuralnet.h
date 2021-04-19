@@ -40,6 +40,8 @@ NeuralNet *NeuralNet_create(int num_inputs, int num_outputs,
 TrainingSet *TrainingSet_create(int num_inputs, double *inputs,
                                 int num_outputs);
 
+void NeuralNet_print(NeuralNet *neural_net);
+
 void Update_weights(NeuralNet *neural_net, double *desired_output,
                     double *result);
 

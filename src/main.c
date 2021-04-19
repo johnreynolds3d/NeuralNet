@@ -19,6 +19,16 @@ int main() {
   double outputs[6][4] = {{0, 0, 0, 1}, {1, 1, 1, 0}, {0, 1, 1, 1},
                           {1, 0, 0, 0}, {0, 1, 1, 0}, {1, 0, 0, 1}};
 
+  int num_activation_functions = 8;
+
+  char *activation_functions[] = {"ArcTan",
+                                  "Binary step",
+                                  "ELU (Exponential Linear Unit)",
+                                  "Leaky ReLU (Rectified Linear Unit)",
+                                  "ReLU (Rectified Linear Unit)",
+                                  "Sigmoid",
+                                  "Sinusoid",
+                                  "TanH"};
   int num_inputs = 2;
   int num_outputs = 1;
   int num_hidden_layers = 1;
@@ -30,9 +40,12 @@ int main() {
       NeuralNet_create(num_inputs, num_outputs, num_hidden_layers,
                        neurons_per_hidden_layer, learning_rate);
 
-  TrainingSet *training_sets[num_sets];
+  printf("\n\nInitial network values:\n");
+  NeuralNet_print(neural_net);
 
   int i = 0, j = 0, k = 0;
+
+  TrainingSet *training_sets[num_sets];
 
   for (i = 0; i < num_sets; i++) {
     training_sets[i] = TrainingSet_create(num_inputs, inputs[i], num_outputs);
@@ -41,11 +54,11 @@ int main() {
   double result[num_outputs];
   double sum_square_error = 0;
 
-  int epochs = pow(2, 10);
+  int num_epochs = pow(2, 10);
 
   for (i = 0; i < num_operations; i++) {
 
-    printf("\n\nTraining for %d epochs on:\n\n    %s operation:\n\n", epochs,
+    printf("\nTraining for %d epochs on:\n\n  %s operation:\n\n", num_epochs,
            operations[i]);
 
     for (j = 0; j < num_sets; j++) {
@@ -57,9 +70,7 @@ int main() {
              (int)training_sets[j]->desired_output[0]);
     }
 
-    for (j = 0; j < epochs; j++) {
-
-      // printf("\n\n\n Epoch %d:", j);
+    for (j = 0; j < num_epochs; j++) {
 
       sum_square_error = 0;
 
@@ -71,7 +82,7 @@ int main() {
     }
 
     // final training and printing of results
-    printf("\n    Results:\n\n");
+    printf("\n\n    Results:\n\n");
 
     for (j = 0; j < num_sets; j++) {
 
@@ -80,7 +91,10 @@ int main() {
       printf("\t\t[%d %d] %f\n", (int)training_sets[j]->inputs[0],
              (int)training_sets[j]->inputs[1], result[0]);
     }
-    printf("\n\t\tsum square error: %.9f\n", sum_square_error);
+    printf("\n\tsum square error:\t%9f\n", sum_square_error);
+
+    printf("\n\nFinal network values:\n");
+    NeuralNet_print(neural_net);
   }
   printf("\n\n");
 
