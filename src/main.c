@@ -14,11 +14,10 @@ int main() {
 
   char *operations[] = {"AND", "NAND", "OR", "NOR", "XOR", "XNOR"};
 
-  double inputs[4][2] = {{0.0, 0.0}, {0.0, 1.0}, {1.0, 0.0}, {1.0, 1.0}};
+  double inputs[4][2] = {{0, 0}, {0, 1}, {1, 0}, {1, 1}};
 
-  double outputs[6][4] = {{0.0, 0.0, 0.0, 1.0}, {1.0, 1.0, 1.0, 0.0},
-                          {0.0, 1.0, 1.0, 1.0}, {1.0, 0.0, 0.0, 0.0},
-                          {0.0, 1.0, 1.0, 0.0}, {1.0, 0.0, 0.0, 1.0}};
+  double outputs[6][4] = {{0, 0, 0, 1}, {1, 1, 1, 0}, {0, 1, 1, 1},
+                          {1, 0, 0, 0}, {0, 1, 1, 0}, {1, 0, 0, 1}};
 
   int num_inputs = 2;
   int num_outputs = 1;
@@ -33,37 +32,36 @@ int main() {
 
   TrainingSet *training_sets[num_sets];
 
-  double sum_square_error = 0.0;
-
-  int epochs = pow(2, 2);
-
   int i = 0, j = 0, k = 0;
 
-  for (i = 0; i < 1; i++) {
+  for (i = 0; i < num_sets; i++) {
+    training_sets[i] = TrainingSet_create(num_inputs, inputs[i], num_outputs);
+  }
 
-    int random_operation = rand() % ((num_operations - 1) - 0 + 1) + 0;
+  double result[num_outputs];
+  double sum_square_error = 0;
 
-    printf("\n\n Training for %d epochs on %s:\n", epochs,
-           operations[random_operation]);
+  int epochs = pow(2, 9);
+
+  for (i = 0; i < num_operations; i++) {
+
+    printf("\n\nTraining for %d epochs on:\n\n    %s operation:\n\n", epochs,
+           operations[i]);
 
     for (j = 0; j < num_sets; j++) {
-      printf("\n\t[%d %d]  %d", (int)inputs[j][0], (int)inputs[j][1],
-             (int)outputs[random_operation][j]);
-    }
 
-    for (j = 0; j < num_sets; j++) {
-      training_sets[j] = TrainingSet_create(num_inputs, inputs[j], num_outputs,
-                                            &outputs[random_operation][j]);
-    }
+      training_sets[j]->desired_output[0] = outputs[i][j];
 
-    double result[num_outputs];
-    sum_square_error = 0.0;
+      printf("\t\t[%d %d] %d\n", (int)training_sets[j]->inputs[0],
+             (int)training_sets[j]->inputs[1],
+             (int)training_sets[j]->desired_output[0]);
+    }
 
     for (j = 0; j < epochs; j++) {
 
-      printf("\n\n\n Epoch %d:", j);
+      // printf("\n\n\n Epoch %d:", j);
 
-      sum_square_error = 0.0;
+      sum_square_error = 0;
 
       for (k = 0; k < num_sets; k++) {
         Train(neural_net, training_sets[k], result);
@@ -71,25 +69,24 @@ int main() {
             pow(result[0] - training_sets[k]->desired_output[0], 2);
       }
     }
-    printf("\n    Sum square error:\t%.9f\n", sum_square_error);
 
     // final training and printing of results
+    printf("\n    Results:\n\n");
+
     for (j = 0; j < num_sets; j++) {
+
       Train(neural_net, training_sets[j], result);
-    }
 
-    printf("\n\n  Results:\n\n");
-
-    for (j = 0; j < num_sets; j++) {
-      printf("\t[%d %d] %f\n", (int)training_sets[j]->inputs[0],
+      printf("\t\t[%d %d] %f\n", (int)training_sets[j]->inputs[0],
              (int)training_sets[j]->inputs[1], result[0]);
     }
-
-    for (j = 0; j < num_sets; j++) {
-      TrainingSet_destroy(training_sets[j]);
-    }
+    printf("\n\t\tsum square error = %.9f\n", sum_square_error);
   }
   printf("\n\n");
+
+  for (j = 0; j < num_sets; j++) {
+    TrainingSet_destroy(training_sets[j]);
+  }
 
   NeuralNet_destroy(neural_net);
 
