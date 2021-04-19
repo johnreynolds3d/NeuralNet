@@ -43,23 +43,21 @@ TrainingSet *TrainingSet_create(int num_inputs, double *inputs,
 void Update_weights(NeuralNet *neural_net, double *desired_output,
                     double *result);
 
-double Step(double value);
-
-double Sigmoid(double value);
+double ArcTan(double value);
 
 double BinaryStep(double value);
 
-double TanH(double value);
+double ELU(double value, double alpha);
 
-double ReLu(double value);
+double LeakyReLU(double value, double alpha);
 
-double LeakyReLu(double value);
+double ReLU(double value);
+
+double Sigmoid(double value);
 
 double Sinusoid(double value);
 
-double ArcTan(double value);
-
-double SoftSign(double value);
+double TanH(double value);
 
 double Activation_function_output_layer(double value);
 

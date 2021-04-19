@@ -41,7 +41,7 @@ int main() {
   double result[num_outputs];
   double sum_square_error = 0;
 
-  int epochs = pow(2, 9);
+  int epochs = pow(2, 10);
 
   for (i = 0; i < num_operations; i++) {
 
@@ -80,7 +80,7 @@ int main() {
       printf("\t\t[%d %d] %f\n", (int)training_sets[j]->inputs[0],
              (int)training_sets[j]->inputs[1], result[0]);
     }
-    printf("\n\t\tsum square error = %.9f\n", sum_square_error);
+    printf("\n\t\tsum square error: %.9f\n", sum_square_error);
   }
   printf("\n\n");
 

@@ -184,17 +184,19 @@ double ArcTan(double value) { return atan(value); }
 
 double BinaryStep(double value) { return value < 0 ? 0 : 1; }
 
-double ELU(double value) { return value <= 0 ? 0.1 * (exp(value) - 1) : value; }
+double ELU(double value, double alpha) {
+  return value <= 0 ? alpha * (exp(value) - 1) : value;
+}
 
-double LeakyRELU(double value) { return value < 0 ? 0.01 * value : value; }
+double LeakyReLU(double value, double alpha) {
+  return value < 0 ? alpha * value : value;
+}
 
-double RELU(double value) { return value > 0 ? value : 0; }
+double ReLU(double value) { return value > 0 ? value : 0; }
 
 double Sigmoid(double value) { return 1 / (1 + exp(-value)); }
 
 double Sinusoid(double value) { return sin(value); }
-
-double SoftSign(double value) { return value / (1 + fabs(value)); }
 
 double TanH(double value) {
   return (exp(value) - exp(-value)) / (exp(value) + exp(-value));

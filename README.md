@@ -2,7 +2,9 @@
 
 ### A basic implementation of an Artificial Neural Network in C
 
-Let's see if we can't round up a whole BUNCH of those pesky Perceptrons, and get 'em to learn the logical XOR operation! (and a few other ones, while we're at it...)
+This project uses a Artificial Neural Network to learn and perform the logical operations AND, NAND, OR, NOR, XOR, and XNOR. 
+
+A work in progress, my goal is to enable the program to discover the optimum machine learning models for these tasks by generating and evaluating the performance of different network parameters and activation functions.
 
 ## Installation
 
@@ -31,7 +33,7 @@ Let's see if we can't round up a whole BUNCH of those pesky Perceptrons, and get
      # ./bin/mac/neuralnet
      ```
 
-## Tests
+## Testing
 
 I've been using Valgrind to highlight potential memory issues. 
 
@@ -42,11 +44,4 @@ On Linux, run
 
 ## Credits
 
-This project is based on Penny de Byl's fabulous https://www.udemy.com/course/machine-learning-with-unity/
-
-## Built with
-
-  * Pop!\_OS 20.10
-  * Vim 8.2
-  * Valgrind 3.18.0
-  * gcc 10.2.0
+This project is based on Penny de Byl's *A Beginner's Guide To Machine Learning with Unity* https://www.udemy.com/course/machine-learning-with-unity/
