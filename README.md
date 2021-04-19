@@ -2,7 +2,7 @@
 
 ### A basic implementation of an Artificial Neural Network in C
 
-This project uses a Artificial Neural Network to learn and perform the logical operations AND, NAND, OR, NOR, XOR, and XNOR. 
+This project uses an Artificial Neural Network to learn and perform the logical operations AND, NAND, OR, NOR, XOR, and XNOR. 
 
 A work in progress, my goal is to enable the program to discover the optimum machine learning models for these tasks by generating and evaluating the performance of different network parameters and activation functions.
 
