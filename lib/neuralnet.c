@@ -85,16 +85,16 @@ NeuralNet *NeuralNet_create(int num_inputs, int num_outputs,
 
   printf("\n\nNeural network parameters:\n");
 
-  printf("\n\tnum inputs:\t\t\t%d\n", neural_net->num_inputs);
+  printf("\n\t\tnum inputs:\t\t   %d\n", neural_net->num_inputs);
 
-  printf("\tnum outputs:\t\t\t%d\n", neural_net->num_outputs);
+  printf("\t\tnum outputs:\t\t   %d\n", neural_net->num_outputs);
 
-  printf("\tnum hidden layers:\t\t%d\n", neural_net->num_hidden_layers);
+  printf("\t\tnum hidden layers:\t   %d\n", neural_net->num_hidden_layers);
 
-  printf("\tneurons per hidden layer:\t%d\n",
+  printf("\t\tneurons per hidden layer:  %d\n",
          neural_net->neurons_per_hidden_layer);
 
-  printf("\tlearning rate:\t\t\t%.1f\n", neural_net->learning_rate);
+  printf("\t\tlearning rate:\t\t   %.1f\n", neural_net->learning_rate);
 
   return neural_net;
 }
@@ -128,26 +128,28 @@ void NeuralNet_print(NeuralNet *neural_net) {
 
   for (i = 0; i <= neural_net->num_hidden_layers; i++) {
 
-    printf("\n  Layer %d:\n", i + 1);
+    printf("\n     Layer %d:\n", i + 1);
 
     for (j = 0; j < neural_net->layers[i]->num_neurons; j++) {
 
-      printf("\n    Neuron %d:\n", j + 1);
+      printf("\n         Neuron %d:\n", j + 1);
 
-      printf("\n\tbias:\t\t\t%9f\n", neural_net->layers[i]->neurons[j]->bias);
+      printf("\n\t\tbias:\t\t\t  %9f\n",
+             neural_net->layers[i]->neurons[j]->bias);
 
-      printf("\toutput:\t\t\t%9f\n", neural_net->layers[i]->neurons[j]->output);
+      printf("\t\toutput:\t\t\t  %9f\n",
+             neural_net->layers[i]->neurons[j]->output);
 
-      printf("\terror gradient:\t\t%9f\n",
+      printf("\t\terror gradient:\t\t  %9f\n",
              neural_net->layers[i]->neurons[j]->error_gradient);
 
       for (k = 0; k < neural_net->layers[i]->neurons[j]->num_inputs; k++) {
-        printf("\tinput %d\t\t\t%9f\n", k + 1,
+        printf("\t\tinput %d\t\t\t  %9f\n", k + 1,
                neural_net->layers[i]->neurons[j]->inputs[k]);
       }
 
       for (k = 0; k < neural_net->layers[i]->neurons[j]->num_inputs; k++) {
-        printf("\tweight %d:\t\t%9f\n", k + 1,
+        printf("\t\tweight %d:\t\t  %9f\n", k + 1,
                neural_net->layers[i]->neurons[j]->weights[k]);
       }
     }
@@ -182,6 +184,7 @@ void Update_weights(NeuralNet *neural_net, double *desired_output,
             result[j] * (1 - result[j]) * error;
 
       } else {
+
         neural_net->layers[i]->neurons[j]->error_gradient =
             neural_net->layers[i]->neurons[j]->output *
             (1 - neural_net->layers[i]->neurons[j]->output);
@@ -189,6 +192,7 @@ void Update_weights(NeuralNet *neural_net, double *desired_output,
         error_gradient_sum = 0;
 
         for (p = 0; p < neural_net->layers[i + 1]->num_neurons; p++) {
+
           error_gradient_sum +=
               neural_net->layers[i + 1]->neurons[p]->error_gradient *
               neural_net->layers[i + 1]->neurons[p]->weights[j];
@@ -209,6 +213,7 @@ void Update_weights(NeuralNet *neural_net, double *desired_output,
               neural_net->layers[i]->neurons[j]->inputs[k] * error;
 
         } else {
+
           neural_net->layers[i]->neurons[j]->weights[k] +=
               neural_net->learning_rate *
               neural_net->layers[i]->neurons[j]->inputs[k] *
@@ -244,11 +249,45 @@ double TanH(double value) {
   return (exp(value) - exp(-value)) / (exp(value) + exp(-value));
 }
 
-double Activation_function(double value) { return Sigmoid(value); }
+double Activation_function(double value, int function) {
 
-double Activation_function_output_layer(double value) { return Sigmoid(value); }
+  assert(function >= 0 && function <= 7);
 
-void Train(NeuralNet *neural_net, TrainingSet *training_set, double *result) {
+  double alpha = 0.01;
+
+  switch (function) {
+  case 0:
+    return ArcTan(value);
+
+  case 1:
+    return BinaryStep(value);
+
+  case 2:
+    return ELU(value, alpha);
+
+  case 3:
+    return LeakyReLU(value, alpha);
+
+  case 4:
+    return ReLU(value);
+
+  case 5:
+    return Sigmoid(value);
+
+  case 6:
+    return Sinusoid(value);
+
+  case 7:
+    return TanH(value);
+  }
+}
+
+double Activation_function_output_layer(double value, int function) {
+  return Sigmoid(value);
+}
+
+void Train(NeuralNet *neural_net, TrainingSet *training_set, double *result,
+           int activation_function) {
 
   assert(neural_net != NULL && training_set != NULL && result != NULL);
 
@@ -301,11 +340,15 @@ void Train(NeuralNet *neural_net, TrainingSet *training_set, double *result) {
 
       // compute output for output layer
       if (i == neural_net->num_hidden_layers) {
+
         neural_net->layers[i]->neurons[j]->output =
-            Activation_function_output_layer(N);
+            Activation_function_output_layer(N, activation_function);
+
       } else {
+
         // compute output for hidden layers
-        neural_net->layers[i]->neurons[j]->output = Activation_function(N);
+        neural_net->layers[i]->neurons[j]->output =
+            Activation_function(N, activation_function);
       }
 
       result[0] = neural_net->layers[i]->neurons[j]->output;

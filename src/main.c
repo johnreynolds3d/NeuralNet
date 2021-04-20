@@ -1,5 +1,6 @@
 #include "../lib/headers/neuralnet.h"
 #include <assert.h>
+#include <float.h>
 #include <math.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -9,9 +10,6 @@ int main() {
 
   srand(time(NULL));
 
-  int num_operations = 6;
-  int num_sets = 4;
-
   char *operations[] = {"AND", "NAND", "OR", "NOR", "XOR", "XNOR"};
 
   double inputs[4][2] = {{0, 0}, {0, 1}, {1, 0}, {1, 1}};
@@ -19,16 +17,6 @@ int main() {
   double outputs[6][4] = {{0, 0, 0, 1}, {1, 1, 1, 0}, {0, 1, 1, 1},
                           {1, 0, 0, 0}, {0, 1, 1, 0}, {1, 0, 0, 1}};
 
-  int num_activation_functions = 8;
-
-  char *activation_functions[] = {"ArcTan",
-                                  "Binary step",
-                                  "ELU (Exponential Linear Unit)",
-                                  "Leaky ReLU (Rectified Linear Unit)",
-                                  "ReLU (Rectified Linear Unit)",
-                                  "Sigmoid",
-                                  "Sinusoid",
-                                  "TanH"};
   int num_inputs = 2;
   int num_outputs = 1;
   int num_hidden_layers = 1;
@@ -40,65 +28,103 @@ int main() {
       NeuralNet_create(num_inputs, num_outputs, num_hidden_layers,
                        neurons_per_hidden_layer, learning_rate);
 
-  printf("\n\nInitial network values:\n");
-  NeuralNet_print(neural_net);
+  // printf("\n\n  Initial network values:\n");
+  // NeuralNet_print(neural_net);
 
-  int i = 0, j = 0, k = 0;
+  int num_training_sets = sizeof(outputs[0]) / sizeof(outputs[0][0]);
+  TrainingSet *training_sets[num_training_sets];
 
-  TrainingSet *training_sets[num_sets];
+  int i = 0, j = 0, k = 0, p = 0;
 
-  for (i = 0; i < num_sets; i++) {
+  for (i = 0; i < num_training_sets; i++) {
     training_sets[i] = TrainingSet_create(num_inputs, inputs[i], num_outputs);
   }
 
-  double result[num_outputs];
-  double sum_square_error = 0;
+  char *activation_functions[] = {"ArcTan",     "Binary Step", "ELU",
+                                  "Leaky ReLU", "ReLU",        "Sigmoid",
+                                  "Sinusoid",   "TanH"};
+
+  int num_activation_functions =
+      sizeof(activation_functions) / sizeof(activation_functions[0]);
+
+  int num_operations = sizeof(operations) / sizeof(operations[0]);
 
   int num_epochs = pow(2, 10);
 
+  int best_activation_function = 0;
+
+  double result[num_outputs];
+  double sum_square_error = 0;
+  double best_sum_square_error = DBL_MAX;
+
   for (i = 0; i < num_operations; i++) {
 
-    printf("\nTraining for %d epochs on:\n\n  %s operation:\n\n", num_epochs,
-           operations[i]);
+    printf("\n\nTraining on %s for %d epochs...\n\n", operations[i],
+           num_epochs);
 
-    for (j = 0; j < num_sets; j++) {
+    for (j = 0; j < num_training_sets; j++) {
 
       training_sets[j]->desired_output[0] = outputs[i][j];
 
-      printf("\t\t[%d %d] %d\n", (int)training_sets[j]->inputs[0],
+      printf("\t\t[%d %d]  %d\n", (int)training_sets[j]->inputs[0],
              (int)training_sets[j]->inputs[1],
              (int)training_sets[j]->desired_output[0]);
     }
 
-    for (j = 0; j < num_epochs; j++) {
+    best_sum_square_error = DBL_MAX;
 
-      sum_square_error = 0;
+    for (j = 0; j < num_activation_functions; j++) {
 
-      for (k = 0; k < num_sets; k++) {
-        Train(neural_net, training_sets[k], result);
-        sum_square_error +=
-            pow(result[0] - training_sets[k]->desired_output[0], 2);
+      for (k = 0; k < num_epochs; k++) {
+
+        sum_square_error = 0;
+
+        for (p = 0; p < num_training_sets; p++) {
+
+          Train(neural_net, training_sets[p], result, j);
+
+          sum_square_error +=
+              pow(result[0] - training_sets[p]->desired_output[0], 2);
+        }
       }
+
+      printf("\n\n    Results for %s using %s:\n\n", operations[i],
+             activation_functions[j]);
+
+      for (k = 0; k < num_training_sets; k++) {
+
+        Train(neural_net, training_sets[k], result, j);
+
+        printf("\t\t[%d %d] %9f\n", (int)training_sets[k]->inputs[0],
+               (int)training_sets[k]->inputs[1], result[0]);
+      }
+
+      printf("\n\t\tsum square error: %9f\n", sum_square_error);
+
+      if (sum_square_error < best_sum_square_error) {
+        best_sum_square_error = sum_square_error;
+        best_activation_function = j;
+
+        // TODO Save network values
+      }
+
+      // printf("\n  Final network values:\n");
+      // NeuralNet_print(neural_net);
     }
 
-    // final training and printing of results
-    printf("\n\n    Results:\n\n");
-
-    for (j = 0; j < num_sets; j++) {
-
-      Train(neural_net, training_sets[j], result);
-
-      printf("\t\t[%d %d] %f\n", (int)training_sets[j]->inputs[0],
-             (int)training_sets[j]->inputs[1], result[0]);
+    if (best_sum_square_error != DBL_MAX) {
+      printf("\n  The best performing activation function for %s was %s,\n"
+             "  with a sum square error of%9f\n",
+             operations[i], activation_functions[best_activation_function],
+             best_sum_square_error);
+    } else {
+      printf("\n  Something went wrong... The developer needs to think a bit "
+             "harder about this!\n");
     }
-    printf("\n\tsum square error:\t%9f\n", sum_square_error);
-
-    printf("\n\nFinal network values:\n");
-    NeuralNet_print(neural_net);
   }
   printf("\n\n");
 
-  for (j = 0; j < num_sets; j++) {
+  for (j = 0; j < num_training_sets; j++) {
     TrainingSet_destroy(training_sets[j]);
   }
 
