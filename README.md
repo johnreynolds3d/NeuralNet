@@ -1,6 +1,6 @@
 # neuralnet
 
-### A basic implementation of an Artificial Neural Network in C
+### A Basic Implementation of an Artificial Neural Network in C
 
 This project uses an Artificial Neural Network to learn and perform the logical operations AND, NAND, OR, NOR, XOR, and XNOR. 
 
