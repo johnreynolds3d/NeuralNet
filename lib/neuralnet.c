@@ -83,19 +83,6 @@ NeuralNet *NeuralNet_create(int num_inputs, int num_outputs,
     neural_net->layers[0] = Layer_create(num_outputs, num_inputs);
   }
 
-  printf("\n\nNeural network parameters:\n");
-
-  printf("\n\t\tnum inputs:\t\t   %d\n", neural_net->num_inputs);
-
-  printf("\t\tnum outputs:\t\t   %d\n", neural_net->num_outputs);
-
-  printf("\t\tnum hidden layers:\t   %d\n", neural_net->num_hidden_layers);
-
-  printf("\t\tneurons per hidden layer:  %d\n",
-         neural_net->neurons_per_hidden_layer);
-
-  printf("\t\tlearning rate:\t\t   %.1f\n", neural_net->learning_rate);
-
   return neural_net;
 }
 
