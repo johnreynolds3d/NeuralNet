@@ -115,11 +115,23 @@ void NeuralNet_print(NeuralNet *neural_net) {
 
   for (i = 0; i <= neural_net->num_hidden_layers; i++) {
 
-    printf("\n     Layer %d:\n", i + 1);
+    if (neural_net->num_hidden_layers == 0) {
+      printf("\n        Single Layer:\n");
+    } else {
+      if (i == 0) {
+        printf("\n        Input Layer:\n");
+      } else {
+        if (i < neural_net->num_hidden_layers) {
+          printf("\n        Hidden Layer %d:\n", i);
+        } else {
+          printf("\n        Output Layer:\n");
+        }
+      }
+    }
 
     for (j = 0; j < neural_net->layers[i]->num_neurons; j++) {
 
-      printf("\n         Neuron %d:\n", j + 1);
+      printf("\n           Neuron %d:\n", j + 1);
 
       printf("\n\t\tbias:\t\t\t  %9f\n",
              neural_net->layers[i]->neurons[j]->bias);
