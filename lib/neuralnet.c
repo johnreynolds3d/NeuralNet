@@ -12,6 +12,7 @@ Neuron *Neuron_create(int num_inputs) {
 
   neuron->num_inputs = num_inputs;
   neuron->bias = (double)rand() / RAND_MAX * 2 - 1;
+  neuron->bias = (double)rand() / RAND_MAX * 2 - 1;
   neuron->output = 0;
   neuron->error_gradient = 0;
 
