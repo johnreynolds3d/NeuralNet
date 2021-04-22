@@ -89,7 +89,7 @@ int main() {
     for (j = 0; j < num_neural_nets; j++) {
 
       num_hidden_layers = rand() % (4 - 0 + 1) + 0;
-      learning_rate = (double)(rand() % (1 - 0 + 1) + 0);
+      learning_rate = (double)rand() / (double)RAND_MAX;
 
       neural_nets[j] =
           NeuralNet_create(num_inputs, num_outputs, num_hidden_layers,
@@ -109,7 +109,9 @@ int main() {
           sum_square_error = 0;
 
           for (q = 0; q < num_training_sets; q++) {
+
             Train(neural_nets[j], training_sets[q], result, k);
+
             sum_square_error +=
                 pow(result[0] - training_sets[q]->desired_output[0], 2);
           }
@@ -170,8 +172,6 @@ int main() {
 
     printf("\t\tactivation function:\t   %s\n\n",
            activation_functions[best_activation_function]);
-
-    // NeuralNet_print(neural_nets[best_neural_net]);
 
     printf("\n\n");
 
