@@ -69,7 +69,7 @@ int main() {
   printf("\n\n\n");
 
   // loop through operations
-  for (i = 4; i < num_operations; i++) {
+  for (i = 0; i < num_operations; i++) {
 
     printf("Training for %d epochs on %s:\n\n", num_epochs, operations[i]);
 
@@ -115,20 +115,24 @@ int main() {
           }
         }
 
-        printf("\n\n    Results for %s using Neural Network %d w/ %s:\n\n ",
-               operations[i], j + 1, activation_functions[k]);
+        if (sum_square_error < 0.01) {
 
-        // final training and printing of results
-        for (p = 0; p < num_training_sets; p++) {
+          printf("\n\n    Results for %s using Neural Network %d w/ %s:\n\n ",
+                 operations[i], j + 1, activation_functions[k]);
 
-          Train(neural_nets[j], training_sets[p], result, k);
+          // final training and printing of results
+          for (p = 0; p < num_training_sets; p++) {
 
-          printf("\t\t[%d %d] %9f\n", (int)training_sets[p]->inputs[0],
-                 (int)training_sets[p]->inputs[1], result[0]);
+            Train(neural_nets[j], training_sets[p], result, k);
+
+            printf("\t\t[%d %d] %9f\n", (int)training_sets[p]->inputs[0],
+                   (int)training_sets[p]->inputs[1], result[0]);
+          }
+          printf("\n\t\tSSE:  %9f\n", sum_square_error);
         }
-        printf("\n\t\tSSE:  %9f\n", sum_square_error);
 
         if (sum_square_error < best_sum_square_error) {
+
           best_sum_square_error = sum_square_error;
           best_activation_function = k;
           best_neural_net = j;
