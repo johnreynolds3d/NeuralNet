@@ -4,6 +4,8 @@
 
 This project uses an Artificial Neural Network to learn and perform the logical operations AND, NAND, OR, NOR, XOR, and XNOR. 
 
+![Screenshot](/img/neuralnet_screenshot_01.webp?raw=true "")
+
 A work in progress, my goal is to enable this system to discover the optimal machine learning models for these tasks by generating, and evaluating the performance of, various combinations of network parameters and activation functions.
 
 ## Installation
