@@ -134,22 +134,22 @@ void NeuralNet_print(NeuralNet *neural_net) {
 
       printf("\n           Neuron %d:\n", j + 1);
 
-      printf("\n\t\tbias:\t\t\t  %9f\n",
+      printf("\n\t\tbias:\t\t\t  %27.24f\n",
              neural_net->layers[i]->neurons[j]->bias);
 
-      printf("\t\toutput:\t\t\t  %9f\n",
+      printf("\t\toutput:\t\t\t  %27.24f\n",
              neural_net->layers[i]->neurons[j]->output);
 
-      printf("\t\terror gradient:\t\t  %9f\n",
+      printf("\t\terror gradient:\t\t  %27.24f\n",
              neural_net->layers[i]->neurons[j]->error_gradient);
 
       for (k = 0; k < neural_net->layers[i]->neurons[j]->num_inputs; k++) {
-        printf("\t\tinput %d\t\t\t  %9f\n", k + 1,
+        printf("\t\tinput %d\t\t\t  %27.24f\n", k + 1,
                neural_net->layers[i]->neurons[j]->inputs[k]);
       }
 
       for (k = 0; k < neural_net->layers[i]->neurons[j]->num_inputs; k++) {
-        printf("\t\tweight %d:\t\t  %9f\n", k + 1,
+        printf("\t\tweight %d:\t\t  %27.24f\n", k + 1,
                neural_net->layers[i]->neurons[j]->weights[k]);
       }
     }

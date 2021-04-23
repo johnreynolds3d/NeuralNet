@@ -117,7 +117,8 @@ int main() {
           }
         }
 
-        if (sum_square_error < 0.01) {
+        // display only the most successful networks/activation functions
+        if (sum_square_error < 0.0001) {
 
           printf("\n\n    Results for %s using Neural Network %d w/ %s:\n\n ",
                  operations[i], j + 1, activation_functions[k]);
@@ -127,10 +128,10 @@ int main() {
 
             Train(neural_nets[j], training_sets[p], result, k);
 
-            printf("\t\t[%d %d] %9f\n", (int)training_sets[p]->inputs[0],
+            printf("\t\t[%d %d] %27.24f\n", (int)training_sets[p]->inputs[0],
                    (int)training_sets[p]->inputs[1], result[0]);
           }
-          printf("\n\t\tSSE:  %9f\n", sum_square_error);
+          printf("\n\t\tSSE:  %27.24f\n", sum_square_error);
         }
 
         if (sum_square_error < best_sum_square_error) {
@@ -139,18 +140,18 @@ int main() {
           best_activation_function = k;
           best_neural_net = j;
 
-          if (best_sum_square_error < 0.001) {
+          if (best_sum_square_error < 0.0001) {
 
-            printf("\n\t\tnum hidden layers:\t   %d\n",
+            printf("\n\t\tnum hidden layers:\t%d\n",
                    neural_nets[best_neural_net]->num_hidden_layers);
 
-            printf("\t\tlearning rate:\t\t   %.1f\n",
+            printf("\t\tlearning rate:\t\t%.1f\n",
                    neural_nets[best_neural_net]->learning_rate);
 
-            printf("\t\tactivation function:\t   %s\n\n",
+            printf("\t\tactivation function:\t%s\n\n",
                    activation_functions[best_activation_function]);
 
-            NeuralNet_print(neural_nets[best_neural_net]);
+            // NeuralNet_print(neural_nets[best_neural_net]);
           }
         }
       }
@@ -158,19 +159,19 @@ int main() {
 
     // -----------------------------  RESULTS  ---------------------------------
 
-    // TODO: if best sse > 0.001, rerun training
+    // TODO: if best sse > 0.0001, rerun training
 
-    printf("\n\n  Our best performer on %s, with an SSE of%9f was...\n\n"
+    printf("\n\n  Our best performer on %s, with an SSE of%27.24f was...\n\n"
            "        Neural Network %d:\n\n",
            operations[i], best_sum_square_error, best_neural_net + 1);
 
-    printf("\t\tnum hidden layers:\t   %d\n",
+    printf("\t\tnum hidden layers:\t%d\n",
            neural_nets[best_neural_net]->num_hidden_layers);
 
-    printf("\t\tlearning rate:\t\t   %.1f\n",
+    printf("\t\tlearning rate:\t\t%.1f\n",
            neural_nets[best_neural_net]->learning_rate);
 
-    printf("\t\tactivation function:\t   %s\n\n",
+    printf("\t\tactivation function:\t%s\n\n",
            activation_functions[best_activation_function]);
 
     printf("\n\n");
