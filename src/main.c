@@ -23,18 +23,34 @@ int main() {
 
   // ---------------------  NEURAL NETWORK PARAMETERS  -------------------------
 
-  int num_neural_nets = 16;
+  int num_inputs = 2;
+  int num_outputs = 1;
+  int num_hidden_layers = 1;
+  int neurons_per_hidden_layer = 2;
+
+  double learning_rate = 0.8;
+
+  int num_neural_nets = 40;
 
   NeuralNet *neural_nets[num_neural_nets];
 
-  int num_inputs = 2;
-  int num_outputs = 1;
-  int num_hidden_layers = 0;
-  int neurons_per_hidden_layer = 2;
+  int i = 0, j = 0, k = 0, p = 0, q = 0;
 
-  double learning_rate = 0;
+  for (i = 0; i < 4; i++) {
 
-  int best_neural_net = 0;
+    num_hidden_layers = i;
+
+    for (j = 0; j < 10; j++) {
+
+      learning_rate = (double)j / 10;
+
+      neural_nets[i * 10 + j] =
+          NeuralNet_create(num_inputs, num_outputs, num_hidden_layers,
+                           neurons_per_hidden_layer, learning_rate);
+    }
+  }
+
+  NeuralNet *best_neural_nets[num_operations];
 
   // -----------------------  ACTIVATION FUNCTIONS  ----------------------------
 
@@ -44,7 +60,7 @@ int main() {
                                   "Leaky ReLU", "ReLU",        "Sigmoid",
                                   "Sinusoid",   "TanH"};
 
-  int best_activation_function = 0;
+  int best_activation_functions[num_operations];
 
   // -----------------------------  TRAINING  ----------------------------------
 
@@ -52,14 +68,12 @@ int main() {
 
   TrainingSet *training_sets[num_training_sets];
 
-  int i = 0, j = 0, k = 0, p = 0, q = 0;
-
   for (i = 0; i < num_training_sets; i++) {
     training_sets[i] = TrainingSet_create(num_inputs, inputs[i], num_outputs);
   }
 
   double sum_square_error = 0;
-  double best_sum_square_error = DBL_MAX;
+  double best_sum_square_errors[num_operations];
   double result[num_outputs];
 
   result[0] = 0;
@@ -69,9 +83,9 @@ int main() {
   printf("\n\n\n");
 
   // loop through operations
-  for (i = 0; i < num_operations; i++) {
+  for (i = 3; i < num_operations - 2; i++) {
 
-    printf("Training for %d epochs on %s:\n\n", num_epochs, operations[i]);
+    printf("\nTraining for %d epochs on %s:\n\n", num_epochs, operations[i]);
 
     // reinitialize training sets for current operation
     for (j = 0; j < num_training_sets; j++) {
@@ -83,18 +97,7 @@ int main() {
              (int)training_sets[j]->desired_output[0]);
     }
 
-    best_sum_square_error = DBL_MAX;
-
-    // create neural networks with random hyperparameters
-    for (j = 0; j < num_neural_nets; j++) {
-
-      num_hidden_layers = rand() % (4 - 0 + 1) + 0;
-      learning_rate = (double)rand() / (double)RAND_MAX;
-
-      neural_nets[j] =
-          NeuralNet_create(num_inputs, num_outputs, num_hidden_layers,
-                           neurons_per_hidden_layer, learning_rate);
-    }
+    best_sum_square_errors[i] = DBL_MAX;
 
     // loop through neural networks
     for (j = 0; j < num_neural_nets; j++) {
@@ -117,8 +120,8 @@ int main() {
           }
         }
 
-        // display only the most successful networks/activation functions
-        if (sum_square_error < 0.0001) {
+        // select the best performers found so far
+        if (sum_square_error < best_sum_square_errors[i]) {
 
           printf("\n\n    Results for %s using Neural Network %d w/ %s:\n\n ",
                  operations[i], j + 1, activation_functions[k]);
@@ -128,57 +131,45 @@ int main() {
 
             Train(neural_nets[j], training_sets[p], result, k);
 
-            printf("\t\t[%d %d] %27.24f\n", (int)training_sets[p]->inputs[0],
+            printf("\t\t[%d %d] %35.32f\n", (int)training_sets[p]->inputs[0],
                    (int)training_sets[p]->inputs[1], result[0]);
           }
-          printf("\n\t\tSSE:  %27.24f\n", sum_square_error);
-        }
+          printf("\n\t\tSSE:  %35.32f\n\n", sum_square_error);
 
-        if (sum_square_error < best_sum_square_error) {
-
-          best_sum_square_error = sum_square_error;
-          best_activation_function = k;
-          best_neural_net = j;
-
-          if (best_sum_square_error < 0.0001) {
-
-            printf("\n\t\tnum hidden layers:\t%d\n",
-                   neural_nets[best_neural_net]->num_hidden_layers);
-
-            printf("\t\tlearning rate:\t\t%.1f\n",
-                   neural_nets[best_neural_net]->learning_rate);
-
-            printf("\t\tactivation function:\t%s\n\n",
-                   activation_functions[best_activation_function]);
-
-            // NeuralNet_print(neural_nets[best_neural_net]);
+          // final check and saving of results
+          if (sum_square_error < best_sum_square_errors[i]) {
+            best_sum_square_errors[i] = sum_square_error;
+            best_activation_functions[i] = k;
+            best_neural_nets[i] = neural_nets[j];
           }
         }
       }
     }
+  }
 
-    // -----------------------------  RESULTS  ---------------------------------
+  // -----------------------------  RESULTS  ---------------------------------
 
-    // TODO: if best sse > 0.0001, rerun training
+  for (i = 3; i < num_operations - 2; i++) {
 
-    printf("\n\n  Our best performer on %s, with an SSE of%27.24f was...\n\n"
-           "        Neural Network %d:\n\n",
-           operations[i], best_sum_square_error, best_neural_net + 1);
+    printf("\n\n  Our best performer on %s was...\n\n", operations[i]);
 
     printf("\t\tnum hidden layers:\t%d\n",
-           neural_nets[best_neural_net]->num_hidden_layers);
+           best_neural_nets[i]->num_hidden_layers);
 
-    printf("\t\tlearning rate:\t\t%.1f\n",
-           neural_nets[best_neural_net]->learning_rate);
+    printf("\t\tlearning rate:\t\t%.1f\n", best_neural_nets[i]->learning_rate);
 
-    printf("\t\tactivation function:\t%s\n\n",
-           activation_functions[best_activation_function]);
+    printf("\t\tactivation function:\t%s\n",
+           activation_functions[best_activation_functions[i]]);
 
-    printf("\n\n");
+    printf("\n\t\tSSE:\t%35.32f\n", best_sum_square_errors[i]);
 
-    for (j = 0; j < num_neural_nets; j++) {
-      NeuralNet_destroy(neural_nets[j]);
-    }
+    NeuralNet_print(best_neural_nets[i]);
+  }
+
+  printf("\n\n");
+
+  for (i = 0; i < num_neural_nets; i++) {
+    NeuralNet_destroy(neural_nets[i]);
   }
 
   for (i = 0; i < num_training_sets; i++) {
