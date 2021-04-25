@@ -66,7 +66,7 @@ int main() {
   double best_results[6][4] = {0};
   double best_sum_square_errors[num_operations];
 
-  int num_epochs = pow(2, 14);
+  int num_epochs = pow(2, 12);
 
   // loop through operations
   for (i = 0; i < num_operations; i++) {
