@@ -21,7 +21,7 @@ int main() {
   double outputs[6][4] = {{0, 0, 0, 1}, {1, 1, 1, 0}, {0, 1, 1, 1},
                           {1, 0, 0, 0}, {0, 1, 1, 0}, {1, 0, 0, 1}};
 
-  // -------------------------  NEURAL NETWORKS  -------------------------------
+  // --------------------------  NEURAL NETWORKS  ------------------------------
 
   int num_inputs = 2;
   int num_outputs = 1;
@@ -66,7 +66,7 @@ int main() {
   double best_results[6][4] = {0};
   double best_sum_square_errors[num_operations];
 
-  int num_epochs = pow(2, 13);
+  int num_epochs = pow(2, 14);
 
   // loop through operations
   for (i = 0; i < num_operations; i++) {
@@ -90,8 +90,8 @@ int main() {
     }
 
     /*
-     * Create neural networks containing all possible combinations of hidden
-     * layers between 0 and 4, and learning rates between 0.0 and 1.0.
+     *  Create neural networks containing all possible combinations of hidden
+     *  layers between 0 and 4, and learning rates between 0.0 and 1.0.
      */
     for (j = 0; j < 5; j++) {
 
