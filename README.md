@@ -4,7 +4,7 @@
 
 This project uses an Artificial Neural Network to learn and perform the logical operations AND, NAND, OR, NOR, XOR, and XNOR. 
 
-![Screenshot](/img/neuralnet_screenshot_01.webp?raw=true "")
+![Screenshot](/img/neuralnet.webp?raw=true "")
 
 A work in progress, my goal is to enable this system to discover the optimal machine learning models for these tasks by generating, and evaluating the performance of, various combinations of network parameters and activation functions.
 
@@ -18,28 +18,20 @@ A work in progress, my goal is to enable this system to discover the optimal mac
      ```
      # cd neuralnet 
      ```
-  3. Run make (on Linux; not sure about Windows atm...)
+  3. Run make
      ```
-     # make -C build/linux
+     # make
      ```
-     or, if you're on a Mac
+  4. Then run the program with
      ```
-     # make -C build/mac
-     ```
-  4. Then run the program (on Linux) with
-     ```
-     # ./bin/linux/neuralnet
-     ```
-     on Mac
-     ```
-     # ./bin/mac/neuralnet
+     # ./bin/neuralnet
      ```
 
 ## Testing
 
 I've been using Valgrind to highlight potential memory issues. 
 
-On Linux, run
+To test using Valgrind, run
 ```
 # sh test/runtests.sh
 ```

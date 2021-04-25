@@ -61,12 +61,12 @@ double Sinusoid(double value);
 
 double TanH(double value);
 
-double Activation_function_output_layer(double value, int function);
+double Act_func_hidden(double value, int function);
 
-double Activation_function(double value, int function);
+double Act_func_output(double value, int function);
 
 void Train(NeuralNet *neural_net, TrainingSet *training_set, double *result,
-           int activation_function);
+           int act_func_hidden, int act_func_output);
 
 void Neuron_destroy(Neuron *neuron);
 
