@@ -60,20 +60,18 @@ int main() {
     training_sets[i] = TrainingSet_create(num_inputs, inputs[i], num_outputs);
   }
 
-  double sum_square_error = 0;
-  double best_sum_square_errors[num_operations];
   double results[num_outputs];
+  double sum_square_error = 0;
   double prev_results[6][4] = {0};
   double best_results[6][4] = {0};
+  double best_sum_square_errors[num_operations];
 
-  int num_epochs = pow(2, 12);
-  int best_num_epochs[num_operations];
+  int num_epochs = pow(2, 13);
 
   // loop through operations
-  for (i = 4; i < num_operations; i++) {
+  for (i = 0; i < num_operations; i++) {
 
     results[0] = 0;
-    best_num_epochs[i] = num_epochs;
     best_neural_net_id[i] = 0;
     best_act_funcs_hidden[i] = 0;
     best_act_funcs_output[i] = 0;
@@ -130,11 +128,6 @@ int main() {
 
               sum_square_error +=
                   pow(results[0] - training_sets[q]->desired_output[0], 2);
-
-              if (sum_square_error < 0.01) {
-                best_num_epochs[i] = p;
-                break;
-              }
             }
           }
 
@@ -167,7 +160,7 @@ int main() {
 
     // -----------------------------  RESULTS  ---------------------------------
 
-    printf("\n\n    Our best performance on %s was...\n\n", operations[i]);
+    printf("\n\n     Best performance on %s was...\n\n", operations[i]);
 
     for (j = 0; j < num_training_sets; j++) {
       printf("\t\t[%d %d] %35.32f\n", (int)inputs[j][0], (int)inputs[j][1],
@@ -176,7 +169,7 @@ int main() {
 
     printf("\n\t\tSSE:  %35.32f\n", best_sum_square_errors[i]);
 
-    printf("\n      By Neural Network %d:\n\n", best_neural_net_id[i]);
+    printf("\n\n        By Neural Network %d:\n\n", best_neural_net_id[i]);
 
     printf("\t\thidden layers:    %d\n",
            best_neural_nets[i]->num_hidden_layers);
@@ -188,8 +181,6 @@ int main() {
 
     printf("\t\tact func output:  %s\n\n",
            activation_functions[best_act_funcs_output[i]]);
-
-    printf("\t\ttraining epochs:  %d\n\n", best_num_epochs[i]);
 
     // NeuralNet_print(best_neural_nets[i]);
 
