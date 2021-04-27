@@ -65,7 +65,7 @@ int main() {
   double prev_results[6][4] = {0};
   double best_results[6][4] = {0};
 
-  int num_epochs = pow(2, 12);
+  int num_epochs = pow(2, 11);
 
   // loop through operations
   for (i = 0; i < num_operations; i++) {
