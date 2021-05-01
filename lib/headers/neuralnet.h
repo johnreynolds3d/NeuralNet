@@ -26,17 +26,13 @@ typedef struct NeuralNet {
 
 typedef struct TrainingSet {
   double *inputs;
-  double *desired_output;
-} TrainingSet;
-
-typedef struct TrainingData {
-  NeuralNet *neural_net;
-  TrainingSet *training_set;
   double *results;
+  double *desired_output;
+  int num_epochs;
   int act_func_hidden;
   int act_func_output;
-  int num_epochs;
-} TrainingData;
+  NeuralNet *neural_net;
+} TrainingSet;
 
 Neuron *Neuron_create(int num_inputs);
 
@@ -46,13 +42,9 @@ NeuralNet *NeuralNet_create(int num_inputs, int num_outputs,
                             int num_hidden_layers, int neurons_per_hidden_layer,
                             double learning_rate);
 
-TrainingSet *TrainingSet_create(int num_inputs, double *inputs,
-                                int num_outputs);
+TrainingSet *TrainingSet_create(double *inputs, int num_inputs, int num_epochs);
 
-TrainingData *TrainingData_create(NeuralNet *neural_net,
-                                  TrainingSet *training_set, double *results,
-                                  int act_func_hidden, int act_func_output,
-                                  int num_epochs);
+void TrainingSet_print(TrainingSet *training_set);
 
 void NeuralNet_print(NeuralNet *neural_net);
 
