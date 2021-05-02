@@ -14,7 +14,7 @@ int main() {
 
   // ----------------------------  OPERATIONS  ---------------------------------
 
-  char *operations[6] = {"AND", "NAND", "OR", "NOR", "XOR", "XNOR"};
+  char *operations[] = {"AND", "NAND", "OR", "NOR", "XOR", "XNOR"};
 
   double inputs[4][2] = {{0, 0}, {0, 1}, {1, 0}, {1, 1}};
 
@@ -25,9 +25,9 @@ int main() {
 
   // -----------------------  ACTIVATION FUNCTIONS  ----------------------------
 
-  char *activation_functions[8] = {"ArcTan",     "Binary Step", "ELU",
-                                   "Sigmoid",    "Sinusoid",    "TanH",
-                                   "Leaky ReLU", "ReLU"};
+  char *activation_functions[] = {"ArcTan",     "Binary Step", "ELU",
+                                  "Sigmoid",    "Sinusoid",    "TanH",
+                                  "Leaky ReLU", "ReLU"};
 
   int best_act_funcs_hidden[num_operations];
   int best_act_funcs_output[num_operations];
@@ -49,7 +49,7 @@ int main() {
 
   // ------------------------------  THREADS  ----------------------------------
 
-  int num_epochs = pow(2, 12);
+  int num_epochs = pow(2, 11);
   int num_training_sets = sizeof(inputs) / sizeof(inputs[0]);
 
   pthread_t threads[num_training_sets];
@@ -59,20 +59,18 @@ int main() {
   int i = 0, j = 0, k = 0, n = 0, p = 0, q = 0;
 
   for (i = 0; i < num_training_sets; i++) {
-    training_sets[i] = TrainingSet_create(inputs[i], num_inputs, num_epochs);
+    training_sets[i] = TrainingSet_create(inputs[i], num_inputs);
   }
 
   // ------------------------------  TRAINING  ---------------------------------
 
-  int result_code = 0;
+  int result_code;
   double sum_square_error;
   double best_sum_square_errors[num_operations];
   double best_results[num_operations][num_training_sets];
 
   // loop through operations
   for (i = 0; i < num_operations; i++) {
-
-    best_sum_square_errors[i] = DBL_MAX;
 
     printf("\n\n  Training on %s:\n\n", operations[i]);
 
@@ -104,6 +102,8 @@ int main() {
       }
     }
 
+    best_sum_square_errors[i] = DBL_MAX;
+
     // loop through neural networks
     for (j = 0; j < num_neural_nets; j++) {
 
@@ -121,27 +121,28 @@ int main() {
         // loop through activation functions for output layer (exclude ReLUs)
         for (n = 3; n < num_activation_functions - 2; n++) {
 
-          sum_square_error = 0;
-
           for (p = 0; p < num_training_sets; p++) {
             training_sets[p]->act_func_output = n;
           }
 
-          for (p = 0; p < num_training_sets; p++) {
+          for (p = 0; p < num_epochs; p++) {
 
-            result_code =
-                pthread_create(&threads[p], NULL, Train, training_sets[p]);
-            assert(!result_code);
+            sum_square_error = 0;
 
-            // TrainingSet_print(training_sets[p]);
+            for (q = 0; q < num_training_sets; q++) {
 
-            sum_square_error += pow(training_sets[p]->results[0] -
-                                        training_sets[p]->desired_output[0],
-                                    2);
-          }
-          for (p = 0; p < num_training_sets; p++) {
-            result_code = pthread_join(threads[p], NULL);
-            assert(!result_code);
+              result_code =
+                  pthread_create(&threads[q], NULL, Train, training_sets[q]);
+              assert(!result_code);
+
+              sum_square_error += pow(training_sets[q]->results[0] -
+                                          training_sets[q]->desired_output[0],
+                                      2);
+            }
+            for (q = 0; q < num_training_sets; q++) {
+              result_code = pthread_join(threads[q], NULL);
+              assert(!result_code);
+            }
           }
 
           if (sum_square_error < best_sum_square_errors[i]) {
@@ -164,11 +165,11 @@ int main() {
     printf("\n     Best performance on %s was...\n\n", operations[i]);
 
     for (j = 0; j < num_training_sets; j++) {
-      printf("\t\t[%d %d] %35.32f\n", (int)inputs[j][0], (int)inputs[j][1],
+      printf("\t\t[%d %d] %11.8f\n", (int)inputs[j][0], (int)inputs[j][1],
              best_results[i][j]);
     }
 
-    printf("\n\t\tSSE:  %35.32f\n", best_sum_square_errors[i]);
+    printf("\n\t\tSSE:  %11.8f\n", best_sum_square_errors[i]);
 
     printf("\n        By Neural Network %d:\n\n", best_neural_nets[i]);
 

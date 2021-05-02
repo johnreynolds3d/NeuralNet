@@ -28,7 +28,6 @@ typedef struct TrainingSet {
   double *inputs;
   double *results;
   double *desired_output;
-  int num_epochs;
   int act_func_hidden;
   int act_func_output;
   NeuralNet *neural_net;
@@ -42,7 +41,7 @@ NeuralNet *NeuralNet_create(int num_inputs, int num_outputs,
                             int num_hidden_layers, int neurons_per_hidden_layer,
                             double learning_rate);
 
-TrainingSet *TrainingSet_create(double *inputs, int num_inputs, int num_epochs);
+TrainingSet *TrainingSet_create(double *inputs, int num_inputs);
 
 void TrainingSet_print(TrainingSet *training_set);
 
