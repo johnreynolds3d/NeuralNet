@@ -85,9 +85,10 @@ NeuralNet *NeuralNet_create(int num_inputs, int num_outputs,
   return neural_net;
 }
 
-TrainingSet *TrainingSet_create(double *inputs, int num_inputs) {
+TrainingSet *TrainingSet_create(double *inputs, int num_inputs,
+                                double *desired_output) {
 
-  assert(inputs != NULL);
+  assert(inputs != NULL && desired_output != NULL);
 
   TrainingSet *training_set = malloc(sizeof(*training_set));
   assert(training_set != NULL);
@@ -102,8 +103,7 @@ TrainingSet *TrainingSet_create(double *inputs, int num_inputs) {
   training_set->results = calloc(1, sizeof(double));
   assert(training_set->results != NULL);
 
-  training_set->desired_output = calloc(1, sizeof(double));
-  assert(training_set->desired_output != NULL);
+  training_set->desired_output = desired_output;
 
   training_set->act_func_hidden = 0;
   training_set->act_func_output = 0;
@@ -328,13 +328,11 @@ double Act_func_output(double value, int function) {
   }
 }
 
-void *Train(void *arg) {
+void Train(TrainingSet *training_set) {
 
-  assert(arg != NULL);
+  assert(training_set != NULL);
 
-  TrainingSet *training_set = (TrainingSet *)arg;
-
-  NeuralNet *neural_net = (NeuralNet *)training_set->neural_net;
+  NeuralNet *neural_net = training_set->neural_net;
 
   int a = 0, i = 0, j = 0, k = 0;
 
@@ -402,8 +400,6 @@ void *Train(void *arg) {
 
   Update_weights(neural_net, training_set->desired_output,
                  training_set->results);
-
-  return NULL;
 }
 
 void Neuron_destroy(Neuron *neuron) {
@@ -446,7 +442,6 @@ void TrainingSet_destroy(TrainingSet *training_set) {
 
   free(training_set->inputs);
   free(training_set->results);
-  free(training_set->desired_output);
 
   free(training_set);
 }
