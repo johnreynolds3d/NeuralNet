@@ -41,15 +41,10 @@ NeuralNet *NeuralNet_create(int num_inputs, int num_outputs,
                             int num_hidden_layers, int neurons_per_hidden_layer,
                             double learning_rate);
 
-TrainingSet *TrainingSet_create(double *inputs, int num_inputs,
-                                double *desired_output);
+TrainingSet *TrainingSet_create(const double *inputs, int num_inputs,
+                                const double *output);
 
-void TrainingSet_print(TrainingSet *training_set);
-
-void NeuralNet_print(NeuralNet *neural_net);
-
-void Update_weights(NeuralNet *neural_net, double *desired_output,
-                    double *result);
+void NeuralNet_print(const NeuralNet *neural_net);
 
 double ArcTan(double value);
 
@@ -57,21 +52,26 @@ double BinaryStep(double value);
 
 double ELU(double value, double alpha);
 
-double LeakyReLU(double value, double alpha);
-
-double ReLU(double value);
-
 double Sigmoid(double value);
 
 double Sinusoid(double value);
 
 double TanH(double value);
 
+double LeakyReLU(double value, double alpha);
+
+double ReLU(double value);
+
 double Act_func_hidden(double value, int function);
 
 double Act_func_output(double value, int function);
 
+void Update_weights(NeuralNet *neural_net, const double *desired_output,
+                    const double *result);
+
 void Train(TrainingSet *training_set);
+
+void *PreTraining(void *arg);
 
 void Neuron_destroy(Neuron *neuron);
 
