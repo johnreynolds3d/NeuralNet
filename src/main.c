@@ -11,14 +11,14 @@ int main() {
 
   srand(time(NULL));
 
-  int result_code = 0;
+  int result_code;
   const int num_operations = 6;
 
   pthread_t threads[num_operations];
 
   printf("\n");
 
-  int i = 0;
+  int i;
 
   for (i = 0; i < num_operations; i++) {
 

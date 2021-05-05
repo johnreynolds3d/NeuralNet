@@ -405,7 +405,7 @@ void *PreTraining(void *arg) {
   const int i = *(int *)arg;
   const int num_outputs = 1;
   const int num_neural_nets = 50;
-  const int num_epochs = pow(2, 11);
+  const int num_epochs = pow(2, 9);
   const int neurons_per_hidden_layer = 2;
   const int num_inputs = sizeof(inputs[0]) / sizeof(inputs[0][0]);
   const int num_training_sets = sizeof(inputs) / sizeof(inputs[0]);
@@ -434,8 +434,8 @@ void *PreTraining(void *arg) {
   }
 
   /*
-   * Create neural networks containing all possible combinations of hidden
-   * layers between 0 and 4, and learning rates between 0.0 and 1.0.
+   *  Create neural networks containing all possible combinations of hidden
+   *  layers between 0 and 4, and learning rates between 0.0 and 1.0.
    */
   for (j = 0; j < 5; j++) {
 
@@ -459,14 +459,14 @@ void *PreTraining(void *arg) {
     }
 
     // loop through activation functions for hidden layers
-    for (k = 0; k < num_activation_functions; k++) {
+    for (k = 2; k < num_activation_functions; k++) {
 
       for (n = 0; n < num_training_sets; n++) {
         training_sets[n]->act_func_hidden = k;
       }
 
       // loop through activation functions for output layer (exclude ReLUs)
-      for (n = 0; n < num_activation_functions - 2; n++) {
+      for (n = 2; n < num_activation_functions - 2; n++) {
 
         for (p = 0; p < num_training_sets; p++) {
           training_sets[p]->act_func_output = n;
@@ -499,8 +499,6 @@ void *PreTraining(void *arg) {
       }
     }
   }
-
-  // -----------------------------  RESULTS  ---------------------------------
 
   printf("\n     Best performance on %s was...\n\n", operations[i]);
 

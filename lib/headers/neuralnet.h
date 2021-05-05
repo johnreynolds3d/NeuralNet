@@ -42,7 +42,7 @@ NeuralNet *NeuralNet_create(int num_inputs, int num_outputs,
                             double learning_rate);
 
 TrainingSet *TrainingSet_create(const double *inputs, int num_inputs,
-                                const double *output);
+                                const double *desired_output);
 
 void NeuralNet_print(const NeuralNet *neural_net);
 
