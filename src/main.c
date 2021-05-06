@@ -7,7 +7,7 @@
 #include <time.h>
 #include <unistd.h>
 
-int main() {
+int main(void) {
 
   srand(time(NULL));
 

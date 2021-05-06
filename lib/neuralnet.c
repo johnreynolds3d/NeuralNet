@@ -6,6 +6,26 @@
 #include <stdlib.h>
 #include <string.h>
 
+const char *operations[] = {"AND", "NAND", "OR", "NOR", "XOR", "XNOR"};
+
+const char *activation_functions[] = {"ArcTan",     "Binary Step", "ELU",
+                                      "Sigmoid",    "Sinusoid",    "TanH",
+                                      "Leaky ReLU", "ReLU"};
+
+const double inputs[4][2] = {{0, 0}, {0, 1}, {1, 0}, {1, 1}};
+
+const double outputs[6][4] = {{0, 0, 0, 1}, {1, 1, 1, 0}, {0, 1, 1, 1},
+                              {1, 0, 0, 0}, {0, 1, 1, 0}, {1, 0, 0, 1}};
+
+const int num_outputs = 1;
+const int num_neural_nets = 50;
+const int num_epochs = pow(2, 9);
+const int neurons_per_hidden_layer = 2;
+const int num_inputs = sizeof(inputs[0]) / sizeof(inputs[0][0]);
+const int num_training_sets = sizeof(inputs) / sizeof(inputs[0]);
+const int num_activation_functions =
+    sizeof(activation_functions) / sizeof(activation_functions[0]);
+
 Neuron *Neuron_create(const int num_inputs) {
 
   Neuron *neuron = malloc(sizeof(*neuron));
@@ -115,7 +135,7 @@ void NeuralNet_print(const NeuralNet *neural_net) {
 
   assert(neural_net != NULL);
 
-  int i, j, k;
+  register int i, j, k;
 
   for (i = 0; i <= neural_net->num_hidden_layers; i++) {
 
@@ -168,7 +188,7 @@ void Update_weights(NeuralNet *neural_net, const double *desired_output,
   double error;
   double error_gradient_sum;
 
-  int i, j, k, p;
+  register int i, j, k, p;
 
   // loop through layers from last to first (backpropagation)
   for (i = neural_net->num_hidden_layers; i >= 0; i--) {
@@ -319,7 +339,7 @@ void Train(TrainingSet *training_set) {
 
   NeuralNet *neural_net = training_set->neural_net;
 
-  int i, j, k;
+  register int i, j, k;
 
   double N;
   double training_inputs[neural_net->num_inputs];
@@ -391,26 +411,7 @@ void *PreTraining(void *arg) {
 
   assert(arg != NULL);
 
-  const char *operations[] = {"AND", "NAND", "OR", "NOR", "XOR", "XNOR"};
-
-  const char *activation_functions[] = {"ArcTan",     "Binary Step", "ELU",
-                                        "Sigmoid",    "Sinusoid",    "TanH",
-                                        "Leaky ReLU", "ReLU"};
-
-  const double inputs[4][2] = {{0, 0}, {0, 1}, {1, 0}, {1, 1}};
-
-  const double outputs[6][4] = {{0, 0, 0, 1}, {1, 1, 1, 0}, {0, 1, 1, 1},
-                                {1, 0, 0, 0}, {0, 1, 1, 0}, {1, 0, 0, 1}};
-
   const int i = *(int *)arg;
-  const int num_outputs = 1;
-  const int num_neural_nets = 50;
-  const int num_epochs = pow(2, 9);
-  const int neurons_per_hidden_layer = 2;
-  const int num_inputs = sizeof(inputs[0]) / sizeof(inputs[0][0]);
-  const int num_training_sets = sizeof(inputs) / sizeof(inputs[0]);
-  const int num_activation_functions =
-      sizeof(activation_functions) / sizeof(activation_functions[0]);
 
   double learning_rate;
   double sum_square_error;
@@ -422,9 +423,8 @@ void *PreTraining(void *arg) {
   int best_act_func_hidden;
   int best_act_func_output;
 
-  int j, k, n, p, q;
+  register int j, k, n, p, q;
 
-  NeuralNet *neural_nets[num_neural_nets];
   TrainingSet *training_sets[num_training_sets];
 
   // create training sets for current operation
@@ -432,6 +432,8 @@ void *PreTraining(void *arg) {
     training_sets[j] =
         TrainingSet_create(inputs[j], num_inputs, &outputs[i][j]);
   }
+
+  NeuralNet *neural_nets[num_neural_nets];
 
   /*
    *  Create neural networks containing all possible combinations of hidden
