@@ -1,8 +1,8 @@
 # neuralnet
 
-### An Implementation in C of an Artificial Neural Network
+### An Implementation of an Artificial Neural Network in C 
 
-This project uses an Artificial Neural Network to learn and perform the logical operations AND, NAND, OR, NOR, XOR, and XNOR. 
+This project uses an Artificial Neural Network to learn the logical operations AND, NAND, OR, NOR, XOR, and XNOR. 
 
 ![Screenshot](/img/neuralnet.webp?raw=true "")
 
@@ -29,11 +29,12 @@ A work in progress, my goal is to enable this system to discover the optimal mac
 
 ## Testing
 
-I've been using Valgrind to highlight potential memory issues. 
-
-To test using Valgrind, run
+I've been using [gperftools](https://github.com/gperftools/gperftools) to profile CPU and heap usage
 ```
-# sh test/runtests.sh
+# sh test/cpu-profiler.sh
+```
+```
+# sh test/heap-profiler.sh
 ```
 
 ## Credits
