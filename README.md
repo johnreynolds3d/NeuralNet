@@ -18,7 +18,7 @@ A work in progress, my goal is to enable this system to discover the optimal mac
      ```
      # cd neuralnet 
      ```
-  3. Run make
+  3. Run *make*
      ```
      # make
      ```
