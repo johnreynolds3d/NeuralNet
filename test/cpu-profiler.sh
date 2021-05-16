@@ -2,7 +2,9 @@
 LD_PRELOAD=/usr/local/lib/libprofiler.so CPUPROFILE=test/cpu.prof ./bin/neuralnet
 
 # run pprof to output one line per procedure 
-pprof --text ./bin/neuralnet test/cpu.prof
+#pprof --text ./bin/neuralnet test/cpu.prof
+
+pprof -http=":" ./bin/neuralnet test/cpu.prof
 
 # run pprof to get graphical output
 #pprof -gv ./bin/neuralnet test/cpu.prof
