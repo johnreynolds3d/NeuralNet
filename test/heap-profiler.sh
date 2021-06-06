@@ -1,5 +1,5 @@
 # run executable with HEAPPROFILE environment var set
-HEAPPROFILE=test/heapprof HEAPCHECK=normal ./bin/neuralnet
+HEAPPROFILE=test/heapprof HEAPCHECK=strict ./bin/neuralnet
 
 # run pprof and view results in a web browser
 pprof -http=localhost:8000 ./bin/neuralnet test/heapprof.0001.heap
@@ -11,4 +11,4 @@ pprof -http=localhost:8000 ./bin/neuralnet test/heapprof.0001.heap
 #pprof -gv ./bin/neuralnet test/heapprof.0001.heap
 
 # generate PDF report with previous graphical output
-#pprof --pdf ./bin/neuralnet test/heapprof.0001.heap > test/heapprof.0001.heap.pdf 
+pprof --pdf ./bin/neuralnet test/heapprof.0001.heap > test/heapprof.0001.heap.pdf 
