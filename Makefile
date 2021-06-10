@@ -7,4 +7,4 @@ build/neuralnet.o : lib/neuralnet.c lib/headers/neuralnet.h
 	gcc -c -fpic -o build/neuralnet.o lib/neuralnet.c
 
 clean : 
-	rm bin/neuralnet build/neuralnet.o test/heapprof.0001.heap test/test.prof test/test_profile.pdf
+	rm bin/neuralnet build/neuralnet.o test/heapprof.0001.heap test/test.prof test/test_profile.pdf test/heapprof.0001.heap.pdf test/results.html
