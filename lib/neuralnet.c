@@ -2,6 +2,7 @@
 #include <assert.h>
 #include <float.h>
 #include <math.h>
+#include <stdint.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -17,16 +18,16 @@ const double inputs[4][2] = {{0, 0}, {0, 1}, {1, 0}, {1, 1}};
 const double outputs[6][4] = {{0, 0, 0, 1}, {1, 1, 1, 0}, {0, 1, 1, 1},
                               {1, 0, 0, 0}, {0, 1, 1, 0}, {1, 0, 0, 1}};
 
-const int num_outputs = 1;
-const int num_neural_nets = 50;
-const int num_epochs = pow(2, 9);
-const int neurons_per_hidden_layer = 2;
-const int num_inputs = sizeof(inputs[0]) / sizeof(inputs[0][0]);
-const int num_training_sets = sizeof(inputs) / sizeof(inputs[0]);
-const int num_activation_functions =
+const uint8_t num_outputs = 1;
+const uint8_t num_neural_nets = 50;
+const uint16_t num_epochs = pow(2, 9);
+const uint8_t neurons_per_hidden_layer = 2;
+const uint8_t num_inputs = sizeof(inputs[0]) / sizeof(inputs[0][0]);
+const uint8_t num_training_sets = sizeof(inputs) / sizeof(inputs[0]);
+const uint8_t num_activation_functions =
     sizeof(activation_functions) / sizeof(activation_functions[0]);
 
-Neuron *Neuron_create(const int num_inputs) {
+Neuron *Neuron_create(const uint8_t num_inputs) {
 
   Neuron *neuron = malloc(sizeof(*neuron));
   assert(neuron != NULL);
@@ -42,7 +43,7 @@ Neuron *Neuron_create(const int num_inputs) {
   neuron->weights = malloc(num_inputs * sizeof(double));
   assert(neuron->weights != NULL);
 
-  for (int i = 0; i < num_inputs; i++) {
+  for (register uint8_t i = 0; i < num_inputs; i++) {
     neuron->inputs[i] = 0;
     neuron->weights[i] = (double)rand() / RAND_MAX * 2 - 1;
   }
@@ -50,7 +51,8 @@ Neuron *Neuron_create(const int num_inputs) {
   return neuron;
 }
 
-Layer *Layer_create(const int num_neurons, const int num_neuron_inputs) {
+Layer *Layer_create(const uint8_t num_neurons,
+                    const uint8_t num_neuron_inputs) {
 
   Layer *layer = malloc(sizeof(*layer));
   assert(layer != NULL);
@@ -60,16 +62,16 @@ Layer *Layer_create(const int num_neurons, const int num_neuron_inputs) {
   layer->neurons = malloc(num_neurons * sizeof(Neuron));
   assert(layer->neurons != NULL);
 
-  for (int i = 0; i < num_neurons; i++) {
+  for (register uint8_t i = 0; i < num_neurons; i++) {
     layer->neurons[i] = Neuron_create(num_neuron_inputs);
   }
 
   return layer;
 }
 
-NeuralNet *NeuralNet_create(const int num_inputs, const int num_outputs,
-                            const int num_hidden_layers,
-                            const int neurons_per_hidden_layer,
+NeuralNet *NeuralNet_create(const uint8_t num_inputs, const uint8_t num_outputs,
+                            const uint8_t num_hidden_layers,
+                            const uint8_t neurons_per_hidden_layer,
                             const double learning_rate) {
 
   NeuralNet *neural_net = malloc(sizeof(*neural_net));
@@ -90,7 +92,7 @@ NeuralNet *NeuralNet_create(const int num_inputs, const int num_outputs,
     neural_net->layers[0] = Layer_create(neurons_per_hidden_layer, num_inputs);
 
     // create hidden layers
-    for (int i = 1; i < num_hidden_layers; i++) {
+    for (register uint8_t i = 1; i < num_hidden_layers; i++) {
       neural_net->layers[i] =
           Layer_create(neurons_per_hidden_layer, neurons_per_hidden_layer);
     }
@@ -106,7 +108,7 @@ NeuralNet *NeuralNet_create(const int num_inputs, const int num_outputs,
   return neural_net;
 }
 
-TrainingSet *TrainingSet_create(const double *inputs, const int num_inputs,
+TrainingSet *TrainingSet_create(const double *inputs, const uint8_t num_inputs,
                                 const double *desired_output) {
 
   assert(inputs != NULL && desired_output != NULL);
@@ -121,7 +123,7 @@ TrainingSet *TrainingSet_create(const double *inputs, const int num_inputs,
   training_set->inputs = malloc(num_inputs * sizeof(double));
   assert(training_set->inputs != NULL);
 
-  for (int i = 0; i < num_inputs; i++) {
+  for (register uint8_t i = 0; i < num_inputs; i++) {
     training_set->inputs[i] = inputs[i];
   }
 
@@ -135,7 +137,7 @@ void NeuralNet_print(const NeuralNet *neural_net) {
 
   assert(neural_net != NULL);
 
-  register int i, j, k;
+  register uint8_t i, j, k;
 
   for (i = 0; i <= neural_net->num_hidden_layers; i++) {
 
@@ -188,7 +190,8 @@ void Update_weights(NeuralNet *neural_net, const double *desired_output,
   double error;
   double error_gradient_sum;
 
-  register int i, j, k, p;
+  register int8_t i;
+  register uint8_t j, k, p;
 
   // loop through layers from last to first (backpropagation)
   for (i = neural_net->num_hidden_layers; i >= 0; i--) {
@@ -271,7 +274,7 @@ double TanH(const double value) {
   return (exp(value) - exp(-value)) / (exp(value) + exp(-value));
 }
 
-double Act_func_hidden(const double value, const int function) {
+double Act_func_hidden(const double value, const uint8_t function) {
 
   assert(function >= 0 && function <= 7);
 
@@ -305,7 +308,7 @@ double Act_func_hidden(const double value, const int function) {
   }
 }
 
-double Act_func_output(const double value, const int function) {
+double Act_func_output(const double value, const uint8_t function) {
 
   assert(function >= 0 && function <= 5);
 
@@ -418,12 +421,12 @@ void *PreTraining(void *arg) {
   double best_results[num_training_sets];
   double best_sum_square_error = DBL_MAX;
 
-  int best_neural_net;
-  int num_hidden_layers;
-  int best_act_func_hidden;
-  int best_act_func_output;
+  uint8_t best_neural_net;
+  uint8_t num_hidden_layers;
+  uint8_t best_act_func_hidden;
+  uint8_t best_act_func_output;
 
-  register int j, k, n, p, q;
+  register uint16_t j, k, n, p, q;
 
   TrainingSet *training_sets[num_training_sets];
 
@@ -550,7 +553,7 @@ void Layer_destroy(Layer *layer) {
 
   assert(layer != NULL);
 
-  for (int i = 0; i < layer->num_neurons; i++) {
+  for (register uint8_t i = 0; i < layer->num_neurons; i++) {
     Neuron_destroy(layer->neurons[i]);
   }
   free(layer->neurons);
@@ -562,7 +565,7 @@ void NeuralNet_destroy(NeuralNet *neural_net) {
 
   assert(neural_net != NULL);
 
-  for (int i = 0; i <= neural_net->num_hidden_layers; i++) {
+  for (register uint8_t i = 0; i <= neural_net->num_hidden_layers; i++) {
     Layer_destroy(neural_net->layers[i]);
   }
   free(neural_net->layers);

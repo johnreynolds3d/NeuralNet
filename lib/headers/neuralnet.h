@@ -1,8 +1,9 @@
+#include <stdint.h>
 #ifndef neuralnet_h
 #define neuralnet_h
 
 typedef struct Neuron {
-  int num_inputs;
+  uint8_t num_inputs;
   double bias;
   double output;
   double error_gradient;
@@ -11,15 +12,15 @@ typedef struct Neuron {
 } Neuron;
 
 typedef struct Layer {
-  int num_neurons;
+  uint8_t num_neurons;
   Neuron **neurons;
 } Layer;
 
 typedef struct NeuralNet {
-  int num_inputs;
-  int num_outputs;
-  int num_hidden_layers;
-  int neurons_per_hidden_layer;
+  uint8_t num_inputs;
+  uint8_t num_outputs;
+  uint8_t num_hidden_layers;
+  uint8_t neurons_per_hidden_layer;
   double learning_rate;
   Layer **layers;
 } NeuralNet;
@@ -28,20 +29,21 @@ typedef struct TrainingSet {
   double *inputs;
   double *results;
   double *desired_output;
-  int act_func_hidden;
-  int act_func_output;
+  uint8_t act_func_hidden;
+  uint8_t act_func_output;
   NeuralNet *neural_net;
 } TrainingSet;
 
-Neuron *Neuron_create(int num_inputs);
+Neuron *Neuron_create(uint8_t num_inputs);
 
-Layer *Layer_create(int num_neurons, int num_neuron_inputs);
+Layer *Layer_create(uint8_t num_neurons, uint8_t num_neuron_inputs);
 
-NeuralNet *NeuralNet_create(int num_inputs, int num_outputs,
-                            int num_hidden_layers, int neurons_per_hidden_layer,
+NeuralNet *NeuralNet_create(uint8_t num_inputs, uint8_t num_outputs,
+                            uint8_t num_hidden_layers,
+                            uint8_t neurons_per_hidden_layer,
                             double learning_rate);
 
-TrainingSet *TrainingSet_create(const double *inputs, int num_inputs,
+TrainingSet *TrainingSet_create(const double *inputs, uint8_t num_inputs,
                                 const double *desired_output);
 
 void NeuralNet_print(const NeuralNet *neural_net);
@@ -62,9 +64,9 @@ double LeakyReLU(double value, double alpha);
 
 double ReLU(double value);
 
-double Act_func_hidden(double value, int function);
+double Act_func_hidden(double value, uint8_t function);
 
-double Act_func_output(double value, int function);
+double Act_func_output(double value, uint8_t function);
 
 void Update_weights(NeuralNet *neural_net, const double *desired_output,
                     const double *result);

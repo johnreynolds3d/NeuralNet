@@ -2,6 +2,7 @@
 #include <assert.h>
 #include <math.h>
 #include <pthread.h>
+#include <stdint.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
@@ -11,17 +12,16 @@ int main(void) {
 
   srand(time(NULL));
 
-  int result_code;
-  const int num_operations = 6;
+  uint32_t result_code;
+  const uint8_t num_operations = 6;
 
   pthread_t threads[num_operations];
 
   printf("\n");
 
-  int i;
+  uint32_t i;
 
   for (i = 0; i < num_operations; i++) {
-
     result_code = pthread_create(&threads[i], NULL, PreTraining, &i);
     assert(!result_code);
   }
