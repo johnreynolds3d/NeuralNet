@@ -1,36 +1,20 @@
 #include "../lib/headers/neuralnet.h"
-#include <assert.h>
-#include <math.h>
-#include <pthread.h>
 #include <stdint.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <time.h>
-#include <unistd.h>
 
-int main(void) {
+/*
+ * Gaze in disbelief as an Artificial Neural Network (AKA Multilayer Perceptron)
+ * does its darndest to learn the logical operations AND, NAND, OR, NOR, XOR,
+ * and XNOR!
+ *
+ * Author:  John Reynolds
+ * Version: 16.01.22
+ */
 
-  srand(time(NULL));
+int main() {
 
-  uint32_t result_code;
-  const uint8_t num_operations = 6;
-
-  pthread_t threads[num_operations];
-
-  printf("\n");
-
-  uint32_t i;
-
-  for (i = 0; i < num_operations; i++) {
-    result_code = pthread_create(&threads[i], NULL, PreTraining, &i);
-    assert(!result_code);
+  for (uint_fast8_t i = 0; i < 6; i++) {
+    PreTraining(i);
   }
-  for (i = 0; i < num_operations; i++) {
-    result_code = pthread_join(threads[i], NULL);
-    assert(!result_code);
-  }
-
-  printf("\n\n");
 
   return 0;
 }
