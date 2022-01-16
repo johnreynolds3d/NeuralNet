@@ -3,8 +3,8 @@
 
 /*
  * Gaze in disbelief as an Artificial Neural Network (AKA Multilayer Perceptron)
- * does its darndest to learn the logical operations AND, NAND, OR, NOR, XOR,
- * and XNOR!
+ * does its darndest to learn, and perform. the logical operations AND, NAND,
+ * OR, NOR, XOR, and XNOR!
  *
  * Author:  John Reynolds
  * Version: 16.01.22

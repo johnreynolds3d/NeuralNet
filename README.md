@@ -1,6 +1,6 @@
 # neuralnet
 
-### Gaze in disbelief as an Artificial Neural Network (AKA Multilayer Perceptron) does its darndest to learn the logical operations AND, NAND, OR, NOR, XOR, and XNOR!
+### Gaze in disbelief as an Artificial Neural Network (AKA *Multilayer Perceptron*) does its darndest to learn, and perform, the logical operations AND, NAND, OR, NOR, XOR, and XNOR!
 
 ![Screenshot](/img/neuralnet.webp?raw=true "")
 
@@ -27,7 +27,7 @@ A work in progress, my goal is to enable this system to discover the optimal mac
 
 ## Testing
 
-I've been using Valgrind to highlight potential memory issues
+I've been using Valgrind to highlight potential memory issues.
 
 To test with Valgrind
 ```
@@ -36,4 +36,4 @@ To test with Valgrind
 
 ## Credits
 
-This project is based on Penny de Byl's 'A Beginner's Guide To Machine Learning with Unity': https://www.udemy.com/course/machine-learning-with-unity/
+This project is based on Penny de Byl's fabulous 'A Beginner's Guide To Machine Learning with Unity': https://www.udemy.com/course/machine-learning-with-unity/
