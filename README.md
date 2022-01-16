@@ -1,8 +1,6 @@
 # neuralnet
 
-### An Implementation of an Artificial Neural Network in C 
-
-In this project, an Artificial Neural Network learns the logical operations AND, NAND, OR, NOR, XOR, and XNOR. 
+### Gaze in disbelief as an Artificial Neural Network (AKA Multilayer Perceptron) does its darndest to learn the logical operations AND, NAND, OR, NOR, XOR, and XNOR!
 
 ![Screenshot](/img/neuralnet.webp?raw=true "")
 
