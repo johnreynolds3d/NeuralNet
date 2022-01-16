@@ -18,11 +18,11 @@ A work in progress, my goal is to enable this system to discover the optimal mac
      ```
      # cd neuralnet 
      ```
-  3. Run *make*
+  3. Run make
      ```
      # make
      ```
-  4. Then run the program with
+  4. Run the program 
      ```
      # ./bin/neuralnet
      ```
@@ -38,4 +38,4 @@ To test with Valgrind
 
 ## Credits
 
-This project is based on Penny de Byl's *A Beginner's Guide To Machine Learning with Unity* https://www.udemy.com/course/machine-learning-with-unity/
+This project is based on Penny de Byl's 'A Beginner's Guide To Machine Learning with Unity': https://www.udemy.com/course/machine-learning-with-unity/
