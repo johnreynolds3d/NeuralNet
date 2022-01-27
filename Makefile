@@ -1,11 +1,11 @@
 CFLAGS = -std=c17 -Wall -Werror -Wextra -Wpedantic -g -O2
 
-bin/neuralnet : src/main.c build/neuralnet.o
-#gcc -o bin/neuralnet src/main.c build/neuralnet.o -lm -lpthread -lprofiler -ltcmalloc
-	gcc -o bin/neuralnet src/main.c build/neuralnet.o -lm
+bin/neuralnet : src/main.c obj/neuralnet.o
+	gcc -o bin/neuralnet src/main.c obj/neuralnet.o -lm
 
-build/neuralnet.o : lib/neuralnet.c lib/headers/neuralnet.h
-	gcc -c -fpic -o build/neuralnet.o lib/neuralnet.c
+obj/neuralnet.o : src/neuralnet.c lib/neuralnet.h
+	gcc -c -fpic -o obj/neuralnet.o src/neuralnet.c
 
+.PHONY: clean
 clean : 
-	rm bin/neuralnet build/neuralnet.o
+	rm bin/neuralnet obj/neuralnet.o

@@ -31,7 +31,7 @@ I've been using Valgrind to highlight potential memory issues.
 
 To test with Valgrind
 ```
-# sh test.sh
+# sh src/test/test.sh
 ```
 
 ## Credits

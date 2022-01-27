@@ -1,5 +1,6 @@
-#include "../lib/headers/neuralnet.h"
+#include "../lib/neuralnet.h"
 #include <stdint.h>
+#include <stdio.h>
 
 /*
  * Gaze in disbelief as an Artificial Neural Network (AKA Multilayer Perceptron)
@@ -15,6 +16,7 @@ int main() {
   for (uint_fast8_t i = 0; i < 6; i++) {
     PreTraining(i);
   }
+  puts("");
 
   return 0;
 }
