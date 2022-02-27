@@ -39,8 +39,7 @@ Neuron *Neuron_create(uint_fast8_t num_inputs);
 Layer *Layer_create(uint_fast8_t num_neurons, uint_fast8_t num_neuron_inputs);
 
 NeuralNet *NeuralNet_create(uint_fast8_t num_inputs, uint_fast8_t num_outputs,
-                            uint_fast8_t num_hidden_layers,
-                            uint_fast8_t neurons_per_hidden_layer,
+                            uint_fast8_t num_hidden_layers, uint_fast8_t neurons_per_hidden_layer,
                             double learning_rate);
 
 TrainingSet *TrainingSet_create(const double *inputs, uint_fast8_t num_inputs,
@@ -68,8 +67,7 @@ double Act_func_hidden(double value, uint_fast8_t function);
 
 double Act_func_output(double value, uint_fast8_t function);
 
-void Update_weights(NeuralNet *neural_net, const double *desired_output,
-                    const double *result);
+void Update_weights(NeuralNet *neural_net, const double *desired_output, const double *result);
 
 void Train(TrainingSet *training_set);
 
