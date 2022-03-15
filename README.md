@@ -1,6 +1,6 @@
 # neuralnet
 
-**Gaze in disbelief as an Artificial Neural Network (AKA *Multilayer Perceptron*) does its darndest to learn and perform the logical operations AND, NAND, OR, NOR, XOR, and XNOR!**
+**Gaze in disbelief as an Artificial Neural Network (AKA *Multilayer Perceptron*) does its darnedest to learn and perform the logical operations AND, NAND, OR, NOR, XOR, and XNOR!**
 
 ![Screenshot](/img/neuralnet.webp?raw=true "")
 
