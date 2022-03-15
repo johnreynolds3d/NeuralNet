@@ -33,6 +33,7 @@ To test with Valgrind:
   ```shell
   $ ./memtest.sh
   ```
+NOTE: run `chmod +x memtest.sh` if you don't have permission to execute the file.
 
 ## Credits
 
